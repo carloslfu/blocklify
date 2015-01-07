@@ -60,7 +60,7 @@ Blockly.Blocks['js_json_element'] = {
 };
 Blockly.Blocks['js_identifier'] = {
   init: function() {
-    this.setColour(330);
+    this.setColour(120);
     this.setOutput(true);
     this.appendDummyInput()
         .appendField(new Blockly.FieldTextInput(''), 'NAME');
@@ -116,7 +116,7 @@ Blockly.Blocks['js_variable_declaration'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(290);
+    this.setColour(330);
     this.setPreviousStatement(true, 'Statement');
     this.setNextStatement(true, 'Statement');
     this.appendDummyInput()

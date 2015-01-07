@@ -173,8 +173,8 @@ Blocklify.JavaScript.Blocks.mutators['switch'] = function (block, options){
       this.setOutput(true);
     } else {
       this.setOutput(false);
-      this.setPreviousStatement(true);
-      this.setNextStatement(true);
+      this.setPreviousStatement(true, 'Statement');
+      this.setNextStatement(true, 'Statement');
     }
     this.hasOutput_ = hasOutput;
   };

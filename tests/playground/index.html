@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: JSBlocklify</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <!-- Blockly sources-->
+  <script src="../../blockly/blockly_compressed.js"></script>
+  <!-- Blocklify sources-->
+  <script src="../../blocklify.js"></script>
+  <script src="../../javascript/javascript.js"></script>
+  <script src="../../javascript/blocks.js"></script>
+  <script src="../../javascript/blocks/mutators.js"></script>
+  <script src="../../javascript/blocks/expressions.js"></script>
+  <script src="../../javascript/blocks/data.js"></script>
+  <script src="../../javascript/blocks/functions.js"></script>
+  <script src="../../javascript/blocks/statements.js"></script>
+  <script src="../../javascript/generator.js"></script>
+  <script src="../../javascript/generators/expressions.js"></script>
+  <script src="../../javascript/generators/data.js"></script>
+  <script src="../../javascript/generators/functions.js"></script>
+  <script src="../../javascript/generators/statements.js"></script>
+  <script src="../../javascript/parser/acorn.js"></script>
+  <script src="../../javascript/parser.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+  <h1>JSBlockly parser (Blocklify)</h1>
+  <p>This is a demo of how parse JS code to JSBlockly.</p>
+  <table id='container'>
+    <tr>
+      <td width='38%'>
+        <button onclick="parse_code();">Parse code</button>
+      </td>
+      <td width='2%'>
+        &nbsp
+      </td>
+      <td width='60%' style="vertical-align: top;">
+        <button onclick="parse_blocks();">Parse blocks</button>
+      </td>
+    </tr>
+    <tr>
+      <td width='38%'>
+        <textarea id="code" style="height: 100%; width: 100%;"></textarea>
+      </td>
+      <td width='2%'>
+        &nbsp
+      </td>
+      <td width='60%' style="vertical-align: top;">
+        <div id="blocklyDiv" style="height: 600px; width: 600px;"></div>
+      </td>
+    </tr>
+  </table>
+  <xml id="toolbox" style="display: none">
+    <category name="Logic">
+    </category>
+  </xml>
+  <script src="main.js"></script>
+</body>
+</html>

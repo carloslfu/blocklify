@@ -176,8 +176,8 @@ Blockly.Blocks['js_call_expression'] = {
    */
   init: function() {
     this.setColour(260);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setPreviousStatement(true, 'Statement');
+    this.setNextStatement(true, 'Statement');
     this.appendValueInput('NAME');
     this.appendValueInput('ARGUMENT0')
           .appendField("(");

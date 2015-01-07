@@ -58,14 +58,9 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 	var block = {};
 	//warn for incompatibility of blockly with JS language or not implemented feature
 	function notimplementedblockmsg (node) {
-		block = Blockly.Block.obtain(workspace ,"text_print");
-		var block_text = Blockly.Block.obtain(workspace ,"text");
-		block_text.setFieldValue("not yet implemented :(", 'TEXT');
+		block = Blockly.Block.obtain(workspace ,"js_notimplemented");
 		block.initSvg();
 		block.render();
-		block_text.initSvg();
-		block_text.render();
-		block.getInput('TEXT').connection.connect(block_text.outputConnection);
 		console.log("not yet implemented node:");
 		console.log(node);
 	}
@@ -158,6 +153,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "CallExpression":
 			block = Blockly.Block.obtain(workspace ,"js_call_expression");
 			block.initSvg();
+			block.render();
 			var nameBlock = Blocklify.JavaScript.Parser.render(node.callee, node, workspace);
 			var inlineFlag = false;
 			block.setArguments(node.arguments.length);
@@ -171,7 +167,6 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				block.setInputsInline(false);
 			}
 			block.getInput('NAME').connection.connect(nameBlock.outputConnection);
-			block.render();
 			break;
 		case "FunctionExpression":
 			if (node.id != null) {
@@ -183,6 +178,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var stackBlock = Blocklify.JavaScript.Parser.render(node.body, node, workspace);
 			var inlineFlag = false;
 			block.initSvg();
+			block.render();
 			block.setParams(node.params.length);
 			node.params.forEach(function (element, index){
 				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
@@ -199,7 +195,6 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			if (stackBlock) {
 				block.getInput('STACK').connection.connect(stackBlock.previousConnection);
 			}
-			block.render();
 			break;
 		case "EmptyStatement":
 			block = "EmptyStatement";
