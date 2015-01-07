@@ -1,6 +1,7 @@
 # Blocklify
 
-A library that extends blockly to parse and render code in blocks.
+A library that extends blockly to parse and render code in [Blockly][blockly] blocks.
+[blockly]: https://developers.google.com/blockly/
 
 ## Installation
 
