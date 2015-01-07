@@ -1,0 +1,1 @@
+//TODO: mapper for javascript, when parse code or blocks map lines to more flexible manipulation
