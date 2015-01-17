@@ -1,6 +1,6 @@
 # Blocklify
 
-A library that extends blockly to parse and render code in [Blockly][blockly] blocks.
+A library that extends blockly to parse and render code in [Blockly][blockly] blocks and generates the same code(ideally).
 
 [![example](https://github.com/carloslfu/blocklify/blob/master/blocklify.jpg)](Blocklify)
 [blockly]: https://developers.google.com/blockly/
@@ -20,6 +20,6 @@ The incoming features, and in develop features are in [Blocklify][trello]
 
 For testing see tests/playground folder.
 
-For make suppurt for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see proyect structure.
+For make suppurt for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the proyect structure.
 [acorn]: http://marijnhaverbeke.nl/acorn/
 Pull your hacks :)
