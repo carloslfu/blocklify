@@ -51,11 +51,11 @@ Blockly.Blocks['js_json_element'] = {
     this.setNextStatement(true, 'JSON_element');
     this.interpolateMsg(
         ' %1 : %2',
-        ['NAME', new Blockly.FieldTextInput('property')],
+        ['KEY', null],
         ['VALUE', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
-    this.setInputsInline(false);
-    this.setTooltip('Element of object in JSON format.');
+    this.setInputsInline(true);
+    this.setTooltip('Element of a object in JSON format.');
   }
 };
 Blockly.Blocks['js_identifier'] = {

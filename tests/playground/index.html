@@ -6,6 +6,7 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
   <!-- Blockly sources-->
   <script src="../../blockly/blockly_compressed.js"></script>
+  <script src="../../blockly/en.js"></script>
   <!-- Blocklify sources-->
   <script src="../../blocklify.js"></script>
   <script src="../../javascript/javascript.js"></script>
@@ -35,7 +36,7 @@
 </head>
 <body>
   <h1>JSBlockly parser (Blocklify)</h1>
-  <p>This is a demo of how parse JS code to JSBlockly.</p>
+  <p>This is a demo of how parse JS code to Blockly JS blocks and inverse.</p>
   <table id='container'>
     <tr>
       <td width='38%'>
@@ -61,7 +62,11 @@
     </tr>
   </table>
   <xml id="toolbox" style="display: none">
-    <category name="Logic">
+    <category name="Data">
+      <block type="js_literal_number"></block>
+      <block type="js_literal_string"></block>
+      <block type="js_json_object"></block>
+      <block type="js_json_element"></block>
     </category>
   </xml>
   <script src="main.js"></script>

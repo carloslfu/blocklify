@@ -136,7 +136,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.getInput('VALUE').connection.connect(initBlock.outputConnection);
 			block.render();
 			break;
-		case "VariableDeclaration"://TODO: do the variable declaration block
+		case "VariableDeclaration":
 			var blocks = [];
 			node.declarations.forEach(function (element, index) {
 				blocks[index] = Blocklify.JavaScript.Parser.render(element, node, workspace);
@@ -192,6 +192,29 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			if (node.id != null) {
 				block.getInput('NAME').connection.connect(nameBlock.outputConnection);
 			}
+			if (stackBlock) {
+				block.getInput('STACK').connection.connect(stackBlock.previousConnection);
+			}
+			break;
+		case "FunctionDeclaration":
+			block = Blockly.Block.obtain(workspace ,"js_function_expression");
+			var nameBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
+			var stackBlock = Blocklify.JavaScript.Parser.render(node.body, node, workspace);
+			var inlineFlag = false;
+			block.initSvg();
+			block.render();
+      block.setOutput_(false);
+			block.setParams(node.params.length);
+			node.params.forEach(function (element, index){
+				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
+				Blocklify.JavaScript.Parser.force_output(paramBlock);
+				block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
+				inlineFlag = inlineFlag || (element.type == 'FunctionExpression');
+			});
+			if (inlineFlag) {
+				block.setInputsInline(false);
+			}
+			block.getInput('NAME').connection.connect(nameBlock.outputConnection);
 			if (stackBlock) {
 				block.getInput('STACK').connection.connect(stackBlock.previousConnection);
 			}
@@ -257,6 +280,28 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.getInput('RIGHT').connection.connect(rightBlock.outputConnection);
 			block.render();
 			break;
+    case "ObjectExpression":
+      var blocks = [];
+      node.properties.forEach(function (element, index) {
+        blocks[index] = Blockly.Block.obtain(workspace ,"js_json_element");
+        blocks[index].initSvg();
+        blocks[index].render();
+        var key = Blocklify.JavaScript.Parser.render(element.key, node, workspace);
+        var value = Blocklify.JavaScript.Parser.render(element.value, node, workspace);
+        Blocklify.JavaScript.Parser.force_output(key);
+        Blocklify.JavaScript.Parser.force_output(value);
+        blocks[index].getInput('KEY').connection.connect(key.outputConnection);
+        blocks[index].getInput('VALUE').connection.connect(value.outputConnection);
+        //connect the block to the previous block
+        if (index != 0) {
+          blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
+        }
+      });
+      block = Blockly.Block.obtain(workspace ,"js_json_object");
+      block.initSvg();
+      block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
+      block.render();
+      break;
 		// if not implemented block
 		default:
 			notimplementedblockmsg(node);
