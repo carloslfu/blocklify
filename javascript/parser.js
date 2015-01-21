@@ -64,6 +64,12 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		console.log("not yet implemented node:");
 		console.log(node);
 	}
+  if (node == null) {
+    block = Blockly.Block.obtain(workspace ,"js_null_value");
+    block.initSvg();
+    block.render();
+    return block;
+  }
 	switch (node.type) {
 		case "Program": case "BlockStatement":
 			var blocks = [], index = 0, tempBlock;
@@ -126,9 +132,11 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var initBlock = Blocklify.JavaScript.Parser.render(node.init, node, workspace);
 			var varBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
 			//fix estetic, only literal has inline
-			if (node.init.type == "FunctionExpression") {
-				block.setInputsInline(false);
-			}
+      if (node.init) {
+  			if (node.init.type == "FunctionExpression" || node.init.type == "ObjectExpression" ) {
+  				block.setInputsInline(false);
+  			}
+      }
 			//force output
 			Blocklify.JavaScript.Parser.force_output(initBlock);
 			block.initSvg();
@@ -203,7 +211,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var inlineFlag = false;
 			block.initSvg();
 			block.render();
-      block.setOutput_(false);
+      		block.setOutput_(false);
 			block.setParams(node.params.length);
 			node.params.forEach(function (element, index){
 				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);

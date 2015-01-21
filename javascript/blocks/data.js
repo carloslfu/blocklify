@@ -12,6 +12,15 @@ Blockly.Blocks['js_literal_number'] = {
     this.setTooltip("Number.");
   }
 };
+Blockly.Blocks['js_null_value'] = {
+  init: function() {
+    this.setColour(230);
+    this.appendDummyInput()
+        .appendField('null');
+    this.setOutput(true);
+    this.setTooltip("Null value.");
+  }
+};
 Blockly.Blocks['js_literal_string'] = {
   init: function() {
     this.setColour(160);
@@ -69,7 +78,7 @@ Blockly.Blocks['js_identifier'] = {
 };
 Blockly.Blocks['js_identifier_member_expression'] = {
   init: function() {
-    this.setColour(330);
+    this.setColour(120);
     this.setOutput(true);
     this.interpolateMsg(
         '%1.%2',
@@ -85,7 +94,7 @@ Blockly.Blocks['js_literal_member_expression'] = {
     this.setColour(160);
     this.interpolateMsg(
         '[%1].%2',
-        ['NAME', new Blockly.FieldTextInput('')],
+        ['NAME', null],
         ['NEXT', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
     this.setOutput(true);
@@ -103,7 +112,7 @@ Blockly.Blocks['js_variable_declarator'] = {
     this.setPreviousStatement(true, 'Declarator');
     this.setNextStatement(true, 'Declarator');
     this.interpolateMsg(
-        'set %1 = %2',
+        '%1 = %2',
         ['VAR', null],
         ['VALUE', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
