@@ -25,4 +25,6 @@ For make suppurt for other languages, make a AST parser like [acorn][acorn], and
 [acorn]: http://marijnhaverbeke.nl/acorn/
 Pull your hacks :)
 
-If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly][blockly] reporting the bug or pulling your patch.
+If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly][blockly-git] reporting the bug or pulling your patch.
+
+[blockly-git]: https://github.com/google/blockly
