@@ -119,6 +119,23 @@ Blockly.Blocks['js_variable_declarator'] = {
     this.setTooltip('Variable declarator.');
   }
 };
+Blockly.Blocks['js_variable_declaration_unary'] = {
+  /**
+   * Block for redering a variable declarator.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(330);
+    this.setPreviousStatement(true, 'Declarator');
+    this.setNextStatement(true, 'Declarator');
+    this.interpolateMsg(
+        'var %1 = %2',
+        ['VAR', null],
+        ['VALUE', null, Blockly.ALIGN_RIGHT],
+        Blockly.ALIGN_RIGHT);
+    this.setTooltip('Variable declarator.');
+  }
+};
 Blockly.Blocks['js_variable_declaration'] = {
   /**
    * Block for redering a variable declaration.

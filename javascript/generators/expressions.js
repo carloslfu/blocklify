@@ -14,6 +14,7 @@ Blocklify.JavaScript.Generator['js_assignment_expression'] = function(block) {
     return code + ';\n';
   }
 };
+
 Blocklify.JavaScript.Generator['js_update_expression_prefix'] = function(block) {
   var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
       Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);
@@ -29,6 +30,7 @@ Blocklify.JavaScript.Generator['js_update_expression_prefix'] = function(block) 
     return code + ';\n';
   }
 };
+
 Blocklify.JavaScript.Generator['js_update_expression_noprefix'] = function(block) {
   var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
       Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);
@@ -44,6 +46,7 @@ Blocklify.JavaScript.Generator['js_update_expression_noprefix'] = function(block
     return code + ';\n';
   }
 };
+
 Blocklify.JavaScript.Generator['js_binary_expression'] = function(block) {
   var OPERATORS = {
     '+': Blocklify.JavaScript.Generator.ORDER_ADDITION,

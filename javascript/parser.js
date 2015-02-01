@@ -132,11 +132,11 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var initBlock = Blocklify.JavaScript.Parser.render(node.init, node, workspace);
 			var varBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
 			//fix estetic, only literal has inline
-      if (node.init) {
-  			if (node.init.type == "FunctionExpression" || node.init.type == "ObjectExpression" ) {
-  				block.setInputsInline(false);
-  			}
-      }
+		      if (node.init) { //TODO: make global variable for none-estetic inline blocks
+		  			if (node.init.type == "FunctionExpression" || node.init.type == "ObjectExpression" ) {
+		  				block.setInputsInline(false);
+		  			}
+		      }
 			//force output
 			Blocklify.JavaScript.Parser.force_output(initBlock);
 			block.initSvg();
@@ -145,17 +145,34 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.render();
 			break;
 		case "VariableDeclaration":
-			var blocks = [];
-			node.declarations.forEach(function (element, index) {
-				blocks[index] = Blocklify.JavaScript.Parser.render(element, node, workspace);
-				//connect the block to the previous block
-				if (index != 0) {
-					blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
-				}
-			});
-			block = Blockly.Block.obtain(workspace ,"js_variable_declaration");
-			block.initSvg();
-			block.getInput('DECLARATIONS').connection.connect(blocks[0].previousConnection);
+			if (node.declarations.length == 1) {
+				block = Blockly.Block.obtain(workspace ,"js_variable_declaration_unary");
+				var initBlock = Blocklify.JavaScript.Parser.render(node.declarations[0].init, node.declarations[0], workspace);
+				var varBlock = Blocklify.JavaScript.Parser.render(node.declarations[0].id, node.declarations[0], workspace);
+				//fix estetic, only literal has inline
+			      if (node.declarations[0].init) { //TODO: make global variable for none-estetic inline blocks
+			  			if (node.declarations[0].init.type == "FunctionExpression" || node.declarations[0].init.type == "ObjectExpression" ) {
+			  				block.setInputsInline(false);
+			  			}
+			      }
+				//force output
+				Blocklify.JavaScript.Parser.force_output(initBlock);
+				block.initSvg();
+				block.getInput('VAR').connection.connect(varBlock.outputConnection);
+				block.getInput('VALUE').connection.connect(initBlock.outputConnection);
+			} else {
+				var blocks = [];
+				node.declarations.forEach(function (element, index) {
+					blocks[index] = Blocklify.JavaScript.Parser.render(element, node, workspace);
+					//connect the block to the previous block
+					if (index != 0) {
+						blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
+					}
+				});
+				block = Blockly.Block.obtain(workspace ,"js_variable_declaration");
+				block.initSvg();
+				block.getInput('DECLARATIONS').connection.connect(blocks[0].previousConnection);
+			}
 			block.render();
 			break;
 		case "CallExpression":
