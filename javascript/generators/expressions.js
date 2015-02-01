@@ -9,54 +9,33 @@ Blocklify.JavaScript.Generator['js_assignment_expression'] = function(block) {
   var code = variable + ' ' + operator + ' ' + value + ';\n'; 
   return code;
 };
-Blockly.Blocks['update_expression_prefix'] = {
-  /**
-   * Block for redering a prefix update expression.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setColour(290);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.interpolateMsg(
-        '%1 %2',
-        ['OPERATOR', new Blockly.FieldTextInput('++')],
-        ['ARGUMENT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Update expression with prefix.');
-  }
+Blocklify.JavaScript.Generator['js_update_expression_prefix'] = function(block) {
+  var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
+      Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);
+  var operator = block.getFieldValue('OPERATOR');
+  var code = operator + argument + ';\n';
+  return code;
 };
-Blockly.Blocks['update_expression_noprefix'] = {
-  /**
-   * Block for redering a no prefix update expression.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setColour(290);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.interpolateMsg(
-        '%1 %2',
-        ['ARGUMENT', null],
-        ['OPERATOR', new Blockly.FieldTextInput('++')],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Update expression without prefix.');
-  }
+Blocklify.JavaScript.Generator['js_update_expression_noprefix'] = function(block) {
+  var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
+      Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);
+  var operator = block.getFieldValue('OPERATOR');
+  var code =  argument + operator + ';\n';
+  return code;
 };
-Blockly.Blocks['binary_expression'] = {
-  /**
-   * Block for redering a binary expression.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setColour(290);
-    this.setOutput(true);
-    this.interpolateMsg(
-        '%1 %2 %3',
-        ['LEFT', null],
-        ['OPERATOR', new Blockly.FieldTextInput('+')],
-        ['RIGHT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Binary expression.');
-  }
+Blocklify.JavaScript.Generator['js_binary_expression'] = function(block) {
+  var OPERATORS = {
+    '+': Blocklify.JavaScript.Generator.ORDER_ADDITION,
+    '-': Blocklify.JavaScript.Generator.ORDER_SUBTRACTION,
+    '*': Blocklify.JavaScript.Generator.ORDER_MULTIPLICATION,
+    '/': Blocklify.JavaScript.Generator.ORDER_DIVISION,
+    '%': Blocklify.JavaScript.Generator.ORDER_MODULUS
+  };
+  var operator = block.getFieldValue('OPERATOR');
+  var left = Blocklify.JavaScript.Generator.valueToCode(block, 'LEFT',
+      OPERATORS[operator]);
+  var right = Blocklify.JavaScript.Generator.valueToCode(block, 'RIGHT',
+      OPERATORS[operator]);
+  var code =  left + ' ' + operator + ' ' + right;
+  return [code, OPERATORS[operator]];
 };
