@@ -1,22 +1,23 @@
-//function blocks
-//TODO: implement mutators for usability
-
-Blockly.Blocks['function_expression'] = {
-  /**
-   * Block for redering a function expression.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setColour(290);
-    this.interpolateMsg(
-        'function %1 (%2)',
-        ['NAME', null],
-        ['PARAMS', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.appendStatementInput('STACK');
-    this.setTooltip('Function expression.');
+Blocklify.JavaScript.Generator['js_function_expression'] = function(block) {
+  var branch = Blocklify.JavaScript.Generator.statementToCode(block, 'STACK');
+  if (Blocklify.JavaScript.Generator.STATEMENT_PREFIX) {
+    branch = Blocklify.JavaScript.Generator.prefixLines(
+        Blocklify.JavaScript.Generator.STATEMENT_PREFIX.replace(/%1/g,
+        '\'' + block.id + '\''), Blocklify.JavaScript.Generator.INDENT) + branch;
   }
+  var name = Blocklify.JavaScript.Generator.valueToCode(block, 'NAME',
+      Blocklify.JavaScript.Generator.ORDER_NONE);
+  var args = [];
+  for (var i = 0; i < block.paramCount; i++) {
+    args[i] = Blocklify.JavaScript.Generator.valueToCode(block, 'PARAM' + i,
+      Blocklify.JavaScript.Generator.ORDER_NONE);
+  }
+  var code = 'function ' + name + '(' + args.join(', ') + ') {\n' +
+      branch + '}';
+  code = Blocklify.JavaScript.Generator.scrub_(block, code);
+  return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };
+
 Blockly.Blocks['anonimous_function_expression'] = {
   /**
    * Block for redering an anonimous function expression.
