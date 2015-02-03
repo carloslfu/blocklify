@@ -6,6 +6,13 @@ The way for do that is make blocks for each language that represent the language
 [![example](https://github.com/carloslfu/blocklify/blob/master/blocklify.jpg)](Blocklify)
 [blockly]: https://developers.google.com/blockly/
 
+## Why?
+
+- An embeddable text editor made with Blockly allows make a custom graphical representation of your code taking advantage of the horizontal space (the code is only vertical).
+- Separate the logic of the graphics is a good idea.
+- Blockly is an awesome tool.
+- Blockly is actively developed and maintained.
+
 ## Installation
 
 Just add a minified version of blocklify before add blockly_compressed.js file.(building system no yet)
