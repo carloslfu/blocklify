@@ -14,7 +14,7 @@ Blocklify.JavaScript.Generator['js_function_expression'] = function(block) {
   }
   var code = 'function ' + name + '(' + args.join(', ') + ') {\n' +
       branch + '}';
-  code = Blocklify.JavaScript.Generator.scrub_(block, code);
+  //code = Blocklify.JavaScript.Generator.scrub_(block, code);
   if (block.outputConnection) {
     return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
   } else {
@@ -36,7 +36,7 @@ Blocklify.JavaScript.Generator['js_anonimous_function_expression'] = function(bl
   }
   var code = 'function (' + args.join(', ') + ') {\n' +
       branch + '}';
-  code = Blocklify.JavaScript.Generator.scrub_(block, code);
+  //code = Blocklify.JavaScript.Generator.scrub_(block, code);
   if (block.outputConnection) {
     return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
   } else {
@@ -58,7 +58,7 @@ Blocklify.JavaScript.Generator['js_call_expression'] = function(block) {
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
   }
   var code = name + '(' + args.join(', ') + ')';
-  code = Blocklify.JavaScript.Generator.scrub_(block, code);
+  //code = Blocklify.JavaScript.Generator.scrub_(block, code);
   if (block.outputConnection) {
     return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
   } else {
