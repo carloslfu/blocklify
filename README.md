@@ -12,7 +12,7 @@ Just add a minified version of blocklify before add blockly_compressed.js file.(
 
 ##Usage
 
-See the demo in demos/ folder.(not yet, see the tests/playground folder)
+See the demo in demos/ folder.
 
 ##Develop and contributing
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blocklify Demo</title>
+  <!-- Blockly sources-->
+  <script src="../blockly/blockly_compressed.js"></script>
+  <script src="../blockly/en.js"></script>
+  <!-- Blocklify sources( build system not yet)-->
+  <script src="../blocklify.js"></script>
+  <script src="../javascript/javascript.js"></script>
+  <script src="../javascript/blocks.js"></script>
+  <script src="../javascript/blocks/mutators.js"></script>
+  <script src="../javascript/blocks/expressions.js"></script>
+  <script src="../javascript/blocks/data.js"></script>
+  <script src="../javascript/blocks/functions.js"></script>
+  <script src="../javascript/blocks/statements.js"></script>
+  <script src="../javascript/generator.js"></script>
+  <script src="../javascript/generators/expressions.js"></script>
+  <script src="../javascript/generators/data.js"></script>
+  <script src="../javascript/generators/functions.js"></script>
+  <script src="../javascript/generators/statements.js"></script>
+  <script src="../javascript/parser/acorn.js"></script>
+  <script src="../javascript/parser.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body onload='onload()'>
+  <h1>Blocklify demo</h1>
+  <p>This is a demo of how show JavaScript code in blocks and generate that code.</p>
+  <table id='container'> <!-- TODO: layout with flexbox -->
+  <button id='toggle' onclick="toggle();">Show blocks</button>
+  <br/>
+  <textarea id="code" style="height: 400px; width: 600px;"></textarea>
+  <div id="blocklyDiv" style="height: 400px; width: 600px;"></div>
+  <xml id="toolbox" style="display: none">
+    <category name="Data">
+      <block type="js_literal_number"></block>
+      <block type="js_literal_string"></block>
+      <block type="js_null_value"></block>
+      <block type="js_json_object"></block>
+      <block type="js_json_element"></block>
+      <block type="js_identifier"></block>
+      <block type="js_identifier_member_expression"></block>
+      <block type="js_literal_member_expression"></block>
+    </category>
+    <category name="Variables">
+      <block type="js_variable_declarator"></block>
+      <block type="js_variable_declaration"></block>
+    </category>
+    <category name="Expressions">
+      <block type="js_assignment_expression"></block>
+      <block type="js_update_expression_prefix"></block>
+      <block type="js_update_expression_noprefix"></block>
+      <block type="js_binary_expression"></block>
+    </category>
+    <category name="Functions">
+      <block type="js_function_expression"></block>
+      <block type="js_anonimous_function_expression"></block>
+      <block type="js_call_expression"></block>
+    </category>
+    <category name="Statements">
+      <block type="js_return_statement"></block>
+    </category>
+  </xml>
+  <script src="main.js"></script>
+</body>
+</html>
