@@ -69,6 +69,19 @@ Blockly.Blocks['variable_declarator'] = {
     this.setTooltip('Variable declarator.');
   }
 };
+Blocklify.JavaScript.Generator['js_variable_declaration_unary'] = function(block) {
+  var operator = block.getFieldValue('OPERATOR');
+  var variable = Blocklify.JavaScript.Generator.valueToCode(block, 'VAR',
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  var value = Blocklify.JavaScript.Generator.valueToCode(block, 'VALUE',
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  var code =  'var ' + variable + ' = ' + value;
+  if (block.outputConnection) {
+    return [code, OPERATORS[operator]];
+  } else {
+    return code + ';\n';
+  }
+};
 Blockly.Blocks['variable_declaration'] = {
   /**
    * Block for redering a variable declaration.
