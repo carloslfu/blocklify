@@ -23,6 +23,8 @@
   <script src="../../javascript/generators/statements.js"></script>
   <script src="../../javascript/parser/acorn.js"></script>
   <script src="../../javascript/parser.js"></script>
+  <!-- Playground sources-->
+  <script src="main.js"></script>
   <style>
     body {
       background-color: #fff;
@@ -34,7 +36,7 @@
     }
   </style>
 </head>
-<body>
+<body onload='onload()'>
   <h1>Blocklify playground</h1>
   <p>This is a testing page.</p>
   <table id='container'><!-- TODO: layout with flexbox -->
@@ -61,37 +63,5 @@
       </td>
     </tr>
   </table>
-  <xml id="toolbox" style="display: none">
-    <sep></sep>
-    <category name="Data">
-      <block type="js_literal_number"></block>
-      <block type="js_literal_string"></block>
-      <block type="js_null_value"></block>
-      <block type="js_json_object"></block>
-      <block type="js_json_element"></block>
-      <block type="js_identifier"></block>
-      <block type="js_identifier_member_expression"></block>
-      <block type="js_literal_member_expression"></block>
-    </category>
-    <category name="Variables">
-      <block type="js_variable_declarator"></block>
-      <block type="js_variable_declaration"></block>
-    </category>
-    <category name="Expressions">
-      <block type="js_assignment_expression"></block>
-      <block type="js_update_expression_prefix"></block>
-      <block type="js_update_expression_noprefix"></block>
-      <block type="js_binary_expression"></block>
-    </category>
-    <category name="Functions">
-      <block type="js_function_expression"></block>
-      <block type="js_anonimous_function_expression"></block>
-      <block type="js_call_expression"></block>
-    </category>
-    <category name="Statements">
-      <block type="js_return_statement"></block>
-    </category>
-  </xml>
-  <script src="main.js"></script>
 </body>
 </html>

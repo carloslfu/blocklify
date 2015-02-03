@@ -21,6 +21,10 @@
 'use strict';
 var onload = function () {
 	var blockly_div = document.getElementById('blocklyDiv');
+	var toolbox_div = document.createElement('div');
+	//Loads toolbox for JavaScript
+	toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
+	document.body.appendChild(toolbox_div);
 	Blockly.inject(blockly_div,
 	        {toolbox: document.getElementById('toolbox'), media: "../../blockly/media/"});
 	setTimeout(function (){
