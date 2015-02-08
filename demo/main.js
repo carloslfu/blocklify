@@ -42,7 +42,7 @@ var toggle = function () {
 		setTimeout(function (){
 			//expect for rendering
 			blockly_div.style.display = "block";
-			toggle_btn.value = "Show code";
+			toggle_btn.innerHTML = "Show code";
 			parse_code();
 		},100);
 	} else {
@@ -51,7 +51,7 @@ var toggle = function () {
 			//expect for rendering
 			blockly_div.style.display = "none";
 			code.style.display = "block";
-			toggle_btn.value = "Show blocks";
+			toggle_btn.innerHTML = "Show blocks";
 			parse_blocks();
 		},100);
 	}
