@@ -12,8 +12,8 @@ A [live demo][livedemo].
 ## Why?
 
 - An embeddable text editor made with Blockly allows make a custom graphical representation of your code taking advantage of the horizontal space (the code is only vertical).
-- Separate the logic of the graphics is a good idea.
-- Blockly is an awesome tool.
+- Organize and give extra meaning to your code, imagine no plain code :).
+- Blockly is an awesome tool, allows realtime collaboration, custom block creation and much more.
 - Blockly is actively developed and maintained.
 
 ## Installation
