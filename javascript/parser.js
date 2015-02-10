@@ -65,7 +65,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		console.log(node);
 	}
   if (node == null) {
-    block = Blockly.Block.obtain(workspace ,"js_null_value");
+    block = Blockly.Block.obtain(workspace ,"js_undefined_value");
     block.initSvg();
     block.render();
     return block;
@@ -99,6 +99,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			if (parent.type == "MemberExpression") {
 				block = Blockly.Block.obtain(workspace ,"js_literal_member_expression");
 				block.setFieldValue(node.value, 'NAME');
+			} else if (node.value == null) {
+				block = Blockly.Block.obtain(workspace ,"js_null_value");
 			} else {
 				if (typeof(node.value) == "number") {
 					block = Blockly.Block.obtain(workspace ,"js_literal_number");
@@ -248,12 +250,16 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block = "EmptyStatement";
 			break;
 		case "Identifier":
-			if (parent.type == "MemberExpression") {
-				block = Blockly.Block.obtain(workspace ,"js_identifier_member_expression");
+			if (node.name == 'undefined') {
+				block = Blockly.Block.obtain(workspace ,"js_undefined_value");
 			} else {
-				block = Blockly.Block.obtain(workspace ,"js_identifier");
+				if (parent.type == "MemberExpression") {
+					block = Blockly.Block.obtain(workspace ,"js_identifier_member_expression");
+				} else {
+					block = Blockly.Block.obtain(workspace ,"js_identifier");
+				}
+				block.setFieldValue(node.name, 'NAME');
 			}
-			block.setFieldValue(node.name, 'NAME');
 			block.initSvg();
 			block.render();
 			break;

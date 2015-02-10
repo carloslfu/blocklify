@@ -21,6 +21,15 @@ Blockly.Blocks['js_null_value'] = {
     this.setTooltip("Null value.");
   }
 };
+Blockly.Blocks['js_undefined_value'] = {
+  init: function() {
+    this.setColour(230);
+    this.appendDummyInput()
+        .appendField('undefined');
+    this.setOutput(true);
+    this.setTooltip("Undefined value.");
+  }
+};
 Blockly.Blocks['js_literal_string'] = {
   init: function() {
     this.setColour(160);
@@ -48,7 +57,7 @@ Blockly.Blocks['js_json_object'] = {
     this.appendDummyInput()
           .appendField('object');
     this.appendStatementInput('ELEMENTS')
-          .setCheck('JSON_element')
+          .setCheck('js_json_element')
           .appendField('elements');
     this.setTooltip('Object in JSON format.');
   }
@@ -56,8 +65,8 @@ Blockly.Blocks['js_json_object'] = {
 Blockly.Blocks['js_json_element'] = {
   init: function() {
     this.setColour(260);
-    this.setPreviousStatement(true, 'JSON_element');
-    this.setNextStatement(true, 'JSON_element');
+    this.setPreviousStatement(true, 'js_json_element');
+    this.setNextStatement(true, 'js_json_element');
     this.interpolateMsg(
         ' %1 : %2',
         ['KEY', null],

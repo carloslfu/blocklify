@@ -8,31 +8,25 @@ Blocklify.JavaScript.Generator['js_literal_string'] = function(block) {
   var code = Blocklify.JavaScript.Generator.quote_(block.getFieldValue('STRING'));
   return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };
-//object in JSON format
-Blockly.Blocks['json_object'] = {
-  init: function() {
-    this.setColour(260);
-    this.setOutput(true);
-    this.appendDummyInput()
-          .appendField('object');
-    this.appendStatementInput('ELEMENTS')
-          .appendField('elements');
-    this.setTooltip('Object in JSON format.');
-  }
+Blocklify.JavaScript.Generator['js_null_value'] = function(block) {
+  return ['null', Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };
-Blockly.Blocks['json_element'] = {
-  init: function() {
-    this.setColour(330);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.interpolateMsg(
-        ' %1 : %2',
-        ['NAME', new Blockly.FieldTextInput('property')],
-        ['VALUE', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setInputsInline(false);
-    this.setTooltip('Element of object in JSON format.');
-  }
+Blocklify.JavaScript.Generator['js_undefined_value'] = function(block) {
+  return ['undefined', Blocklify.JavaScript.Generator.ORDER_ATOMIC];
+};
+Blocklify.JavaScript.Generator['js_json_object'] = function(block) {
+  var elements = Blocklify.JavaScript.Generator.statementToCode(block, 'ELEMENTS');
+  var code = ' {\n' +
+      elements + '}';
+  return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
+};
+Blocklify.JavaScript.Generator['js_json_element'] = function(block) {
+  var key = Blocklify.JavaScript.Generator.valueToCode(block, 'KEY',
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  var value = Blocklify.JavaScript.Generator.valueToCode(block, 'VALUE',
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  var code =  key + ' : ' + value + ',\n';
+  return code;
 };
 Blocklify.JavaScript.Generator['js_identifier'] = function(block) {
   var name = block.getFieldValue('NAME');
