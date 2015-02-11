@@ -8,6 +8,12 @@ goog.provide('Blocklify.JavaScript.Blocks.mutators');
 Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
   var xmlAttrName = options.target.toLowerCase() + 's';
   var elementCount = options.elementCount;
+  if (!options.startText) {
+    options.startText = '';
+  }
+  if (!options.endText) {
+    options.endText = '';
+  }
 
   var blockMutationToDom = block.mutationToDom;
   block.mutationToDom = function() {
@@ -33,17 +39,17 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
     this.removeInput('END');
     this[elementCount] = parseInt(xmlElement.getAttribute(xmlAttrName), 10);
     if (this[elementCount] == 0) {
-      this.appendDummyInput('START').appendField("(");
+      this.appendDummyInput('START').appendField(options.startText);
     } else {
       for (var x = 0; x < this[elementCount]; x++) {
         var input = this.appendValueInput(options.target + x);
         if (x == 0) {
-          input.appendField("(")
+          input.appendField(options.startText)
         }
       }
     }
     this.appendDummyInput('END')
-          .appendField(")");
+          .appendField(options.endText);
   };
   var blockDecompose = block.decompose;
   block.decompose = function(workspace) {
@@ -81,7 +87,7 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
     while (argBlock) {
       var input = this.appendValueInput(options.target + this[elementCount]);
       if (this[elementCount] == 0) {
-        input.appendField("(");
+        input.appendField(options.startText);
       }
       // Reconnect any child blocks.
       if (argBlock.valueConnection_) {
@@ -92,10 +98,10 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
           argBlock.nextConnection.targetBlock();
     }
     if (this[elementCount] == 0) {
-      this.appendDummyInput('START').appendField("(");
+      this.appendDummyInput('START').appendField(options.startText);
     }
     this.appendDummyInput('END')
-          .appendField(")");
+          .appendField(options.endText);
   };
   block.saveConnections = function(containerBlock) {
     var argBlock = containerBlock.getInputTargetBlock('STACK');
@@ -120,18 +126,18 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
     this.removeInput('END');
     this[elementCount] = numels;
     if (numels == 0) {
-      this.appendDummyInput('START').appendField("(");
+      this.appendDummyInput('START').appendField(options.startText);
     } else {
       // Rebuild the block's inputs.
       for (var i = 0 ; i < numels ; i++) {
         var input = this.appendValueInput(options.target + i);
         if (i == 0) {
-          input.appendField("(");
+          input.appendField(options.startText);
         }
       }
     }
     this.appendDummyInput('END')
-          .appendField(")");
+          .appendField(options.endText);
   };
 };
 

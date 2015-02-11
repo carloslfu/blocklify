@@ -253,18 +253,13 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			if (node.name == 'undefined') {
 				block = Blockly.Block.obtain(workspace ,"js_undefined_value");
 			} else {
-				if (parent.type == "MemberExpression") {
-					block = Blockly.Block.obtain(workspace ,"js_identifier_member_expression");
-				} else {
-					block = Blockly.Block.obtain(workspace ,"js_identifier");
-				}
+				block = Blockly.Block.obtain(workspace ,"js_identifier");
 				block.setFieldValue(node.name, 'NAME');
 			}
 			block.initSvg();
 			block.render();
 			break;
 		case "MemberExpression":
-			//just a '.' concatenator, its a most elegant form to render that
 			var object = Blocklify.JavaScript.Parser.render(node.object, node, workspace);
 			var property = Blocklify.JavaScript.Parser.render(node.property, parent, workspace);
 			if (object.type == "js_identifier_member_expression" || 

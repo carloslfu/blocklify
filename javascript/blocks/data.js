@@ -85,32 +85,6 @@ Blockly.Blocks['js_identifier'] = {
     this.setTooltip('Identifier.');
   }
 };
-Blockly.Blocks['js_identifier_member_expression'] = {
-  init: function() {
-    this.setColour(120);
-    this.setOutput(true);
-    this.interpolateMsg(
-        '%1.%2',
-        ['NAME', new Blockly.FieldTextInput('')],
-        ['NEXT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setInputsInline(false);
-    this.setTooltip('Identifier of member expression.');
-  }
-};
-Blockly.Blocks['js_literal_member_expression'] = {
-  init: function() {
-    this.setColour(160);
-    this.interpolateMsg(
-        '[%1].%2',
-        ['NAME', null],
-        ['NEXT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setOutput(true);
-    this.setInputsInline(false);
-    this.setTooltip("Literal string of member expression.");
-  }
-};
 Blockly.Blocks['js_variable_declarator'] = {
   /**
    * Block for redering a variable declarator.

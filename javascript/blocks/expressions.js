@@ -71,3 +71,59 @@ Blockly.Blocks['js_binary_expression'] = {
     this.setTooltip('Binary expression.');
   }
 };
+Blockly.Blocks['js_member_expression'] = {
+  /**
+   * Block for redering a member expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.setOutput(true);
+    this.appendValueInput('MEMBER0');
+    this.appendDummyInput('END'); //TODO: fix mutator for omiting it
+    this.setInputsInline(true);
+    this.setMutator(new Blockly.Mutator(['js_member_expression_member']));
+    this.argCount = 1;
+    this.setTooltip('Member expression.');
+    var argMutator = {
+      name: 'clone',
+      target: 'MEMBER',
+      mutatorContainer: 'js_member_expression_container',
+      mutatorArgument: 'js_member_expression_member',
+      elementCount: 'memberCount'
+    };
+    Blocklify.JavaScript.Blocks.setMutators(this,[argMutator]);
+    this.setArguments = this.setElements;
+  }
+};
+
+Blockly.Blocks['js_member_expression_container'] = {
+  /**
+   * Mutator block for function container.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.appendDummyInput()
+        .appendField("function");
+    this.appendStatementInput('STACK');
+    this.setTooltip("Add, remove or reorder arguments of the function.");
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_member_expression_member'] = {
+  /**
+   * Mutator block for adding members to a member expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.appendDummyInput()
+        .appendField("member");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Add a member to a member expression.");
+    this.contextMenu = false;
+  }
+};

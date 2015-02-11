@@ -96,7 +96,9 @@ Blockly.Blocks['js_anonimous_function_expression'] = {
       target: 'PARAM',
       mutatorContainer: 'js_function_expression_container',
       mutatorArgument: 'js_function_expression_param',
-      elementCount: 'paramCount'
+      elementCount: 'paramCount',
+      startText: '(',
+      endText: ')'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator, {name: 'switch'}]);
     this.setParams = this.setElements;
@@ -160,10 +162,10 @@ Blockly.Blocks['js_function_expression_param'] = {
   init: function() {
     this.setColour(290);
     this.appendDummyInput()
-        .appendField("argument");
+        .appendField("pameter");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip("Add an argument to a function.");
+    this.setTooltip("Add an parameter to a function declaration.");
     this.contextMenu = false;
   }
 };
@@ -192,7 +194,9 @@ Blockly.Blocks['js_call_expression'] = {
       target: 'ARGUMENT',
       mutatorContainer: 'js_call_expression_container',
       mutatorArgument: 'js_call_expression_argument',
-      elementCount: 'argCount'
+      elementCount: 'argCount',
+      startText: '(',
+      endText: ')'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator, {name: 'switch'}]);
     this.setArguments = this.setElements;
@@ -226,7 +230,7 @@ Blockly.Blocks['js_call_expression_argument'] = {
         .appendField("argument");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip("Add an argument to a function.");
+    this.setTooltip("Add an argument to a function call.");
     this.contextMenu = false;
   }
 };
