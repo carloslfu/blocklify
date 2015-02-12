@@ -85,6 +85,18 @@ Blockly.Blocks['js_identifier'] = {
     this.setTooltip('Identifier.');
   }
 };
+Blockly.Blocks['js_computed_member_expression'] = {
+  init: function() {
+    this.setColour(160);
+    this.interpolateMsg(
+        '[%1]',
+        ['MEMBER', null],
+        Blockly.ALIGN_RIGHT);
+    this.setOutput(true);
+    this.setInputsInline(true);
+    this.setTooltip("Computed member of member expression.");
+  }
+};
 Blockly.Blocks['js_variable_declarator'] = {
   /**
    * Block for redering a variable declarator.

@@ -96,10 +96,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block = Blocklify.JavaScript.Parser.render(node.expression, node, workspace);
 			break;
 		case "Literal":
-			if (parent.type == "MemberExpression") {
-				block = Blockly.Block.obtain(workspace ,"js_literal_member_expression");
-				block.setFieldValue(node.value, 'NAME');
-			} else if (node.value == null) {
+			if (node.value == null) {
 				block = Blockly.Block.obtain(workspace ,"js_null_value");
 			} else {
 				if (typeof(node.value) == "number") {
@@ -250,7 +247,11 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block = "EmptyStatement";
 			break;
 		case "Identifier":
-			if (node.name == 'undefined') {
+			if(parent.type == "MemberExpression" && parent.computed) {
+				block = Blockly.Block.obtain(workspace ,"js_computed_member_expression");
+				var memberBlock = Blocklify.JavaScript.Parser.render(node, node, workspace);
+				block.getInput('MEMBER').connection.connect(memberBlock.outputConnection);
+			} else if (node.name == 'undefined') {
 				block = Blockly.Block.obtain(workspace ,"js_undefined_value");
 			} else {
 				block = Blockly.Block.obtain(workspace ,"js_identifier");
@@ -260,19 +261,23 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.render();
 			break;
 		case "MemberExpression":
-			var object = Blocklify.JavaScript.Parser.render(node.object, node, workspace);
-			var property = Blocklify.JavaScript.Parser.render(node.property, parent, workspace);
-			if (object.type == "js_identifier_member_expression" || 
-				object.type == "js_literal_member_expression") {
-				object.getInput('NEXT').connection.connect(property.outputConnection);
-			} else {
-				object.nextOutputConnection.connect(property.outputConnection);
+			var current_node = node, count = 2, memberBlock, member, parentM = node;
+			while (current_node.object.type != "Identifier") {
+				count++;
+				current_node = current_node.object;
 			}
-			if (property.type == "js_identifier_member_expression" ||
-				property.type == "js_literal_member_expression") {
-				block.nextOutputConnection = property.getInput('NEXT').connection;
-			}
-			block.outputConnection = object.outputConnection;
+			block = Blockly.Block.obtain(workspace ,"js_member_expression");
+			block.setMembers(count);
+			for (var i = count-1, current_node = node; i >= 0; i--) {
+				//condition for final node
+				member = (i == 0)?current_node:current_node.property;
+				memberBlock = Blocklify.JavaScript.Parser.render(member, parentM, workspace);
+				block.getInput('MEMBER' + i).connection.connect(memberBlock.outputConnection);
+				current_node = current_node.object;
+				parentM = current_node;
+			};
+			block.initSvg();
+			block.render();
 			break;
 		case "ReturnStatement":
 			block = Blockly.Block.obtain(workspace ,"js_return_statement");
@@ -306,31 +311,31 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.getInput('RIGHT').connection.connect(rightBlock.outputConnection);
 			block.render();
 			break;
-    case "ObjectExpression":
-      var blocks = [];
-      node.properties.forEach(function (element, index) {
-        blocks[index] = Blockly.Block.obtain(workspace ,"js_json_element");
-        blocks[index].initSvg();
-        blocks[index].render();
-        var key = Blocklify.JavaScript.Parser.render(element.key, node, workspace);
-        var value = Blocklify.JavaScript.Parser.render(element.value, node, workspace);
-        Blocklify.JavaScript.Parser.force_output(key);
-        Blocklify.JavaScript.Parser.force_output(value);
-        blocks[index].getInput('KEY').connection.connect(key.outputConnection);
-        blocks[index].getInput('VALUE').connection.connect(value.outputConnection);
-        //connect the block to the previous block
-        if (index != 0) {
-          blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
-        }
-      });
-      block = Blockly.Block.obtain(workspace ,"js_json_object");
-      block.initSvg();
-      block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
-      block.render();
-      break;
-		// if not implemented block
-		default:
-			notimplementedblockmsg(node);
+    	case "ObjectExpression":
+			var blocks = [];
+			node.properties.forEach(function (element, index) {
+				blocks[index] = Blockly.Block.obtain(workspace ,"js_json_element");
+				blocks[index].initSvg();
+				blocks[index].render();
+				var key = Blocklify.JavaScript.Parser.render(element.key, node, workspace);
+				var value = Blocklify.JavaScript.Parser.render(element.value, node, workspace);
+				Blocklify.JavaScript.Parser.force_output(key);
+				Blocklify.JavaScript.Parser.force_output(value);
+				blocks[index].getInput('KEY').connection.connect(key.outputConnection);
+				blocks[index].getInput('VALUE').connection.connect(value.outputConnection);
+				//connect the block to the previous block
+				if (index != 0) {
+				  blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
+				}
+			});
+			block = Blockly.Block.obtain(workspace ,"js_json_object");
+			block.initSvg();
+			block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
+			block.render();
+			break;
+			// if not implemented block
+			default:
+				notimplementedblockmsg(node);
 	}
 	return block;
 }

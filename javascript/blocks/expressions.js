@@ -77,13 +77,13 @@ Blockly.Blocks['js_member_expression'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(260);
+    this.setColour(240);
     this.setOutput(true);
     this.appendValueInput('MEMBER0');
     this.appendDummyInput('END'); //TODO: fix mutator for omiting it
     this.setInputsInline(true);
     this.setMutator(new Blockly.Mutator(['js_member_expression_member']));
-    this.argCount = 1;
+    this.memberCount = 1;
     this.setTooltip('Member expression.');
     var argMutator = {
       name: 'clone',
@@ -93,7 +93,7 @@ Blockly.Blocks['js_member_expression'] = {
       elementCount: 'memberCount'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator]);
-    this.setArguments = this.setElements;
+    this.setMembers = this.setElements;
   }
 };
 
@@ -103,7 +103,7 @@ Blockly.Blocks['js_member_expression_container'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(260);
+    this.setColour(240);
     this.appendDummyInput()
         .appendField("function");
     this.appendStatementInput('STACK');
@@ -118,7 +118,7 @@ Blockly.Blocks['js_member_expression_member'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(260);
+    this.setColour(240);
     this.appendDummyInput()
         .appendField("member");
     this.setPreviousStatement(true);
