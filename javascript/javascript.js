@@ -34,6 +34,11 @@ Blocklify.JavaScript.toolbox =
             '<field name="NAME"></field>' +
           '</block>' +
         '</value>' +
+        '<value name="VALUE">' +
+          '<block type="js_literal_number">' +
+            '<field name="VALUE"></field>' +
+          '</block>' +
+        '</value>' +
       '</block>' +
     '</category>' +
   	'<sep>pure</sep>' +
