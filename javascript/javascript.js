@@ -36,7 +36,7 @@ Blocklify.JavaScript.toolbox =
         '</value>' +
         '<value name="VALUE">' +
           '<block type="js_literal_number">' +
-            '<field name="VALUE"></field>' +
+            '<field name="NUMBER"></field>' +
           '</block>' +
         '</value>' +
       '</block>' +
@@ -49,8 +49,7 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_json_object"></block>' +
       '<block type="js_json_element"></block>' +
       '<block type="js_identifier"></block>' +
-      '<block type="js_identifier_member_expression"></block>' +
-      '<block type="js_literal_member_expression"></block>' +
+      '<block type="js_computed_member_expression"></block>' +
     '</category>' +
     '<category name="Variables">' +
       '<block type="js_variable_declaration_unary"></block>' +
