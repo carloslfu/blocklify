@@ -71,4 +71,7 @@ Blocklify.JavaScript.toolbox =
     '<category name="Statements">' +
       '<block type="js_return_statement"></block>' +
     '</category>' +
+    '<category name="Custom">' +
+      '<block type="js_blocklify"></block>' +
+    '</category>' +
   '</xml>';
