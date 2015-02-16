@@ -2,7 +2,7 @@
 
 'use strict'
 
-Blockly.Blocks['controls_if'] = {
+Blockly.Blocks['js_if_statement'] = {
   /**
    * Block for if/elseif/else condition.
    * @this Blockly.Block
