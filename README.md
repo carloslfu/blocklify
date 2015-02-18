@@ -19,13 +19,9 @@ A [live demo][livedemo].
 ## Features
 - Two way parsing code, import and export code.
 
-## Installation
-
-Just add a minified version of blocklify before add blockly_compressed.js file.(building system no yet)
-
 ##Usage
 
-See the demo in demos/ folder.
+Just add blocklify_compressed.js file to your code (See the demo in demos folder).
 
 ##Develop and contributing
 
