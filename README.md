@@ -18,6 +18,7 @@ A [live demo][livedemo].
 
 ## Features
 - Two way parsing code, import and export code.
+
 ## Installation
 
 Just add a minified version of blocklify before add blockly_compressed.js file.(building system no yet)
@@ -41,7 +42,7 @@ If you wants to do any feature or have found any bug related to the rendering of
 
 [blockly-git]: https://github.com/google/blockly
 
-### Features to be implemented in [Blockly][blockly-git] needed for this project:
+### Features to be implemented in [Blockly][blockly-git] needed for this project
 - PointerEvents support for IE10-11 support.
 - [Zooming][Zooming]. (yet - not merged - needs to be revised and improved)
 - Multiple block selection.
@@ -54,7 +55,8 @@ If you wants to do any feature or have found any bug related to the rendering of
 - Pugins API.
 - Full SVG implemented fields for best UI. (not overlay text elements)
 - Styling API.
-### Features to be implemented in this project:
+
+### Features to be implemented in this project
 - Blocklify block for importing and exporting code into workspace.
 - Marked point and follow functions. (for merging changes)
 - Group block. (moves a group of blocks like one using group floating field)
