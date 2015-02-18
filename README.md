@@ -23,7 +23,7 @@ A [live demo][livedemo].
 
 Just add blocklify_compressed.js file to your code (See the demo in demos folder).
 
-##Develop and contributing
+##Develop
 
 The incoming features, and in develop features are in [Blocklify][trello]
 [trello]: https://trello.com/b/IhdIln7f/blocklify
@@ -59,3 +59,10 @@ If you wants to do any feature or have found any bug related to the rendering of
 
 [Zooming]: https://github.com/carloslfu/blockly/tree/mouse_zooming
 [PEP]: https://github.com/jquery/PEP
+
+## Contributing
+Feel free to contribute. This is the workflow to make a contribution:
+- Fork the repo.
+- Make your change.
+- Test and debug it in tests/playground/index.html page.
+- Make a pull request describing what you have done.
