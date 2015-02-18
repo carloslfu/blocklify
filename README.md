@@ -50,7 +50,7 @@ If you wants to do any feature or have found any bug related to the rendering of
 - Group floating field.
 - Floating toobox displayed with contextmenu.
 - Hideable toolbox. (mousehover event diplays that with a transition)
-- Instanciable workspace and instantiable blockly. (for multiple workspaces and multiple blockly instances)
+- Instantiable workspace and instantiable blockly. (for multiple workspaces and multiple blockly instances)
 - Nested workspaces and nested blockly instances.
 - Pugins API.
 - Full SVG implemented fields for best UI. (not overlay text elements)
