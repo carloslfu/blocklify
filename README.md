@@ -58,7 +58,7 @@ If you wants to do any feature or have found any bug related to the rendering of
 
 ### Features to be implemented in this project
 - Blocklify block for importing and exporting code into workspace.
-- Marked point and follow functions. (for merging changes)
+- Marked point in code and follow functions. (for merging changes in code)
 - Group block. (moves a group of blocks like one using group floating field)
 
 [Zooming]: https://github.com/carloslfu/blockly/tree/mouse_zooming
