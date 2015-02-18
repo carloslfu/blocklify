@@ -28,16 +28,6 @@ Just add blocklify_compressed.js file to your code (See the demo in demos folder
 The incoming features, and in develop features are in [Blocklify][trello]
 [trello]: https://trello.com/b/IhdIln7f/blocklify
 
-For testing see tests/playground folder.
-
-For make suppurt for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the proyect structure.
-[acorn]: http://marijnhaverbeke.nl/acorn/
-Pull your hacks :)
-
-If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly][blockly-git] reporting the bug or pulling your patch.
-
-[blockly-git]: https://github.com/google/blockly
-
 ### Features to be implemented in [Blockly][blockly-git] needed for this project
 - PointerEvents support for IE10-11 support.
 - [Zooming][Zooming]. (yet - not merged - needs to be revised and improved)
@@ -66,3 +56,10 @@ Feel free to contribute. This is the workflow to make a contribution:
 - Make your change.
 - Test and debug it in tests/playground/index.html page.
 - Make a pull request describing what you have done.
+For make support for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the proyect structure.
+[acorn]: http://marijnhaverbeke.nl/acorn/
+Pull your hacks :)
+
+If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly][blockly-git] reporting the bug or pulling your patch.
+
+[blockly-git]: https://github.com/google/blockly
