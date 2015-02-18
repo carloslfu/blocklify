@@ -9,7 +9,7 @@ Blockly.Blocks['js_if_statement'] = {
    */
   init: function() {
     this.setHelpUrl(Blockly.Msg.CONTROLS_IF_HELPURL);
-    this.setColour(Blockly.Blocks.logic.HUE);
+    this.setColour(220);
     this.appendValueInput('IF0')
         .setCheck('Boolean')
         .appendField(Blockly.Msg.CONTROLS_IF_MSG_IF);
@@ -17,8 +17,8 @@ Blockly.Blocks['js_if_statement'] = {
         .appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setMutator(new Blockly.Mutator(['controls_if_elseif',
-                                         'controls_if_else']));
+    this.setMutator(new Blockly.Mutator(['js_elseif_statement',
+                                         'js_else_statement']));
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
     this.setTooltip(function() {
@@ -81,17 +81,17 @@ Blockly.Blocks['js_if_statement'] = {
    * @this Blockly.Block
    */
   decompose: function(workspace) {
-    var containerBlock = Blockly.Block.obtain(workspace, 'controls_if_if');
+    var containerBlock = Blockly.Block.obtain(workspace, 'js_if_if_statement');
     containerBlock.initSvg();
     var connection = containerBlock.getInput('STACK').connection;
     for (var i = 1; i <= this.elseifCount_; i++) {
-      var elseifBlock = Blockly.Block.obtain(workspace, 'controls_if_elseif');
+      var elseifBlock = Blockly.Block.obtain(workspace, 'js_elseif_statement');
       elseifBlock.initSvg();
       connection.connect(elseifBlock.previousConnection);
       connection = elseifBlock.nextConnection;
     }
     if (this.elseCount_) {
-      var elseBlock = Blockly.Block.obtain(workspace, 'controls_if_else');
+      var elseBlock = Blockly.Block.obtain(workspace, 'js_else_statement');
       elseBlock.initSvg();
       connection.connect(elseBlock.previousConnection);
     }
@@ -118,7 +118,7 @@ Blockly.Blocks['js_if_statement'] = {
     var clauseBlock = containerBlock.getInputTargetBlock('STACK');
     while (clauseBlock) {
       switch (clauseBlock.type) {
-        case 'controls_if_elseif':
+        case 'js_elseif_statement':
           this.elseifCount_++;
           var ifInput = this.appendValueInput('IF' + this.elseifCount_)
               .setCheck('Boolean')
@@ -133,7 +133,7 @@ Blockly.Blocks['js_if_statement'] = {
             doInput.connection.connect(clauseBlock.statementConnection_);
           }
           break;
-        case 'controls_if_else':
+        case 'js_else_statement':
           this.elseCount_++;
           var elseInput = this.appendStatementInput('ELSE');
           elseInput.appendField(Blockly.Msg.CONTROLS_IF_MSG_ELSE);
@@ -159,7 +159,7 @@ Blockly.Blocks['js_if_statement'] = {
     var i = 1;
     while (clauseBlock) {
       switch (clauseBlock.type) {
-        case 'controls_if_elseif':
+        case 'js_elseif_statement':
           var inputIf = this.getInput('IF' + i);
           var inputDo = this.getInput('DO' + i);
           clauseBlock.valueConnection_ =
@@ -168,7 +168,7 @@ Blockly.Blocks['js_if_statement'] = {
               inputDo && inputDo.connection.targetConnection;
           i++;
           break;
-        case 'controls_if_else':
+        case 'js_else_statement':
           var inputDo = this.getInput('ELSE');
           clauseBlock.statementConnection_ =
               inputDo && inputDo.connection.targetConnection;
@@ -182,13 +182,13 @@ Blockly.Blocks['js_if_statement'] = {
   }
 };
 
-Blockly.Blocks['controls_if_if'] = {
+Blockly.Blocks['js_if_if_statement'] = {
   /**
    * Mutator block for if container.
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(Blockly.Blocks.logic.HUE);
+    this.setColour(220);
     this.appendDummyInput()
         .appendField(Blockly.Msg.CONTROLS_IF_IF_TITLE_IF);
     this.appendStatementInput('STACK');
@@ -197,13 +197,13 @@ Blockly.Blocks['controls_if_if'] = {
   }
 };
 
-Blockly.Blocks['controls_if_elseif'] = {
+Blockly.Blocks['js_elseif_statement'] = {
   /**
    * Mutator bolck for else-if condition.
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(Blockly.Blocks.logic.HUE);
+    this.setColour(220);
     this.appendDummyInput()
         .appendField(Blockly.Msg.CONTROLS_IF_ELSEIF_TITLE_ELSEIF);
     this.setPreviousStatement(true);
@@ -213,13 +213,13 @@ Blockly.Blocks['controls_if_elseif'] = {
   }
 };
 
-Blockly.Blocks['controls_if_else'] = {
+Blockly.Blocks['js_else_statement'] = {
   /**
    * Mutator block for else condition.
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(Blockly.Blocks.logic.HUE);
+    this.setColour(220);
     this.appendDummyInput()
         .appendField(Blockly.Msg.CONTROLS_IF_ELSE_TITLE_ELSE);
     this.setPreviousStatement(true);

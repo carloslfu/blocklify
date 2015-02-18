@@ -57,6 +57,7 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_variable_declaration"></block>' +
     '</category>' +
     '<category name="Expressions">' +
+      '<block type="js_if_statement"></block>' +
       '<block type="js_assignment_expression"></block>' +
       '<block type="js_update_expression_prefix"></block>' +
       '<block type="js_update_expression_noprefix"></block>' +
