@@ -46,6 +46,7 @@ The incoming features, and in develop features are in [Blocklify][trello]
 - Blocklify block for importing and exporting code into workspace.
 - Marked point in code and follow functions. (for merging changes in code)
 - Group block. (moves a group of blocks like one using group floating field)
+- Support for other languages(i'm working in JS) like HTML, python, CSS, C, C++ and more.
 
 [Zooming]: https://github.com/carloslfu/blockly/tree/mouse_zooming
 [PEP]: https://github.com/jquery/PEP
