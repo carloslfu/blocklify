@@ -19,6 +19,9 @@ A [live demo][livedemo].
 ## Features
 - Two way parsing code, import and export code.
 
+Supported languages:
+- JavaScript. (partially - in develop)
+
 ##Usage
 
 Just add blocklify_compressed.js file to your code (See the demo in demos folder).
