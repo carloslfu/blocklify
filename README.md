@@ -36,7 +36,7 @@ The incoming features, and in develop features are in [Blocklify][trello]
 - [Zooming][Zooming]. (yet - not merged - needs to be revised and improved)
 - Multiple block selection.
 - Multitouch support. (Maybe a full PointerEvents implementation + [polyfills][PEP])
-- Group floating field.
+- Floating group field.
 - Floating toobox displayed with contextmenu.
 - Hideable toolbox. (mousehover event diplays that with a transition)
 - Instantiable workspace and instantiable blockly. (for multiple workspaces and multiple blockly instances)
@@ -48,7 +48,7 @@ The incoming features, and in develop features are in [Blocklify][trello]
 ### Features to be implemented in this project
 - Blocklify block for importing and exporting code into workspace.
 - Marked point in code and follow functions. (for merging changes in code)
-- Group block. (moves a group of blocks like one using group floating field)
+- Group block. (moves a group of blocks like one using floating group field)
 - Support for other languages(i'm working in JS) like HTML, python, CSS, C, C++ and more.
 
 [Zooming]: https://github.com/carloslfu/blockly/tree/mouse_zooming
