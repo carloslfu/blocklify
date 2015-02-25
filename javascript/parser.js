@@ -56,6 +56,8 @@ Blocklify.JavaScript.Parser.force_output = function (block) {
 Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 	//the return block
 	var block = {};
+	//none-estetic inline blocks
+	var no_inline_blocks = ["FunctionExpression", "ObjectExpression"];
 	//warn for incompatibility of blockly with JS language or not implemented feature
 	function notimplementedblockmsg (node) {
 		block = Blockly.Block.obtain(workspace ,"js_notimplemented");
@@ -105,6 +107,11 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				} else if(typeof(node.value) == "string") {
 					block = Blockly.Block.obtain(workspace ,"js_literal_string");
 					block.setFieldValue(node.value, 'STRING');
+				} else if(typeof(node.value) == "boolean") {
+					block = Blockly.Block.obtain(workspace ,"js_literal_bool");
+					// temporal hack while block.getIput('BOOL') don't work properly.
+					block.inputList[0].fieldRow[0].value_ = node.raw;
+					block.inputList[0].fieldRow[0].text_ = node.raw;
 				}
 			}
 			block.initSvg();
@@ -115,7 +122,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var leftBlock = Blocklify.JavaScript.Parser.render(node.left, node, workspace);
 			var rightBlock = Blocklify.JavaScript.Parser.render(node.right, node, workspace);
 			//fix estetic, only literal has inline
-			if (node.right.type == "FunctionExpression") {
+			if (no_inline_blocks.indexOf(node.right.type) != -1) {
 				block.setInputsInline(false);
 			}
 			block.setFieldValue(node.operator, 'OPERATOR');
@@ -131,8 +138,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var initBlock = Blocklify.JavaScript.Parser.render(node.init, node, workspace);
 			var varBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
 			//fix estetic, only literal has inline
-		      if (node.init) { //TODO: make global variable for none-estetic inline blocks
-		  			if (node.init.type == "FunctionExpression" || node.init.type == "ObjectExpression" ) {
+		      if (node.init) {
+		  			if (no_inline_blocks.indexOf(node.init.type) != -1) {
 		  				block.setInputsInline(false);
 		  			}
 		      }
@@ -150,7 +157,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				var varBlock = Blocklify.JavaScript.Parser.render(node.declarations[0].id, node.declarations[0], workspace);
 				//fix estetic, only literal has inline
 			      if (node.declarations[0].init) { //TODO: make global variable for none-estetic inline blocks
-			  			if (node.declarations[0].init.type == "FunctionExpression" || node.declarations[0].init.type == "ObjectExpression" ) {
+			  			if (no_inline_blocks.indexOf(node.declarations[0].init.type) != -1) {
 			  				block.setInputsInline(false);
 			  			}
 			      }
@@ -185,7 +192,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				var argBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(argBlock);
 				block.getInput('ARGUMENT' + index).connection.connect(argBlock.outputConnection);
-				inlineFlag = inlineFlag || (element.type == 'FunctionExpression');
+				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
 			});
 			if (inlineFlag) {
 				block.setInputsInline(false);
@@ -208,7 +215,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(paramBlock);
 				block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
-				inlineFlag = inlineFlag || (element.type == 'FunctionExpression');
+				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
 			});
 			if (inlineFlag) {
 				block.setInputsInline(false);
@@ -233,7 +240,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(paramBlock);
 				block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
-				inlineFlag = inlineFlag || (element.type == 'FunctionExpression');
+				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
 			});
 			if (inlineFlag) {
 				block.setInputsInline(false);
@@ -262,7 +269,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "MemberExpression":
 			var current_node = node, count = 2, memberBlock, member, parentM = node;
-			while (current_node.object.type != "Identifier") {
+			while (current_node.object.type == "MemberExpression") {
 				count++;
 				current_node = current_node.object;
 			}
@@ -315,6 +322,9 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			var blocks = [];
 			node.properties.forEach(function (element, index) {
 				blocks[index] = Blockly.Block.obtain(workspace ,"js_json_element");
+				if (no_inline_blocks.indexOf(element.value.type) != -1) {
+			  		blocks[index].setInputsInline(false);
+			  	}
 				blocks[index].initSvg();
 				blocks[index].render();
 				var key = Blocklify.JavaScript.Parser.render(element.key, node, workspace);
@@ -333,9 +343,46 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
 			block.render();
 			break;
+		case "IfStatement":
+			block = Blockly.Block.obtain(workspace ,"js_if_statement");
+			var tests = [], consequents = [], current_node = node.alternate, countElseIf = 0, countElse = 0;
+			tests.push(Blocklify.JavaScript.Parser.render(node.test, node, workspace));
+			consequents.push(Blocklify.JavaScript.Parser.render(node.consequent, node, workspace));
+			Blocklify.JavaScript.Parser.force_output(tests[0]);
+			while (current_node) {
+				if (current_node.type == 'IfStatement') {
+					countElseIf++;
+					tests.push(Blocklify.JavaScript.Parser.render(current_node.test, current_node, workspace));
+					Blocklify.JavaScript.Parser.force_output(tests[tests.length-1]);
+					consequents.push(Blocklify.JavaScript.Parser.render(current_node.consequent, current_node, workspace));
+					current_node = current_node.alternate;
+				} else {
+					countElse = 1;
+					var alternate = Blocklify.JavaScript.Parser.render(current_node.alternate || current_node, node, workspace);
+					current_node = null;
+				}
+			};
+			block.setCounts(countElseIf, countElse);
+			block.getInput('IF0').connection.connect(tests[0].outputConnection);
+			block.getInput('DO0').connection.connect(consequents[0].previousConnection);
+			for (var i = 1; i <= countElseIf; i++) {
+				block.getInput('IF' + i).connection.connect(tests[i].outputConnection);
+				block.getInput('DO' + i).connection.connect(consequents[i].previousConnection);
+			}
+			if (countElse == 1) {
+				block.getInput('ELSE').connection.connect(alternate.previousConnection);
+			}
+			block.initSvg();
+			block.render();
+			break;
+		case "ThisExpression":
+			block = Blockly.Block.obtain(workspace ,"js_this_expression");
+			block.initSvg();
+			block.render();
+			break;
 			// if not implemented block
-			default:
-				notimplementedblockmsg(node);
+		default:
+			notimplementedblockmsg(node);
 	}
 	return block;
 }

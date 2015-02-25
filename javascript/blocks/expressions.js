@@ -15,8 +15,8 @@ Blockly.Blocks['js_if_statement'] = {
         .appendField(Blockly.Msg.CONTROLS_IF_MSG_IF);
     this.appendStatementInput('DO0')
         .appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setPreviousStatement(true, 'Statement');
+    this.setNextStatement(true, 'Statement');
     this.setMutator(new Blockly.Mutator(['js_elseif_statement',
                                          'js_else_statement']));
     // Assign 'this' to a variable for use in the tooltip closure below.
@@ -150,6 +150,38 @@ Blockly.Blocks['js_if_statement'] = {
     }
   },
   /**
+   * Reconfigure this block based on the mutator dialog's components.
+   * @param {!Blockly.Block} containerBlock Root block in mutator.
+   * @this Blockly.Block
+   */
+  setCounts: function(elseifCount_, elseCount_) {
+    // Disconnect the else input blocks and remove the inputs.
+    if (this.elseCount_) {
+      this.removeInput('ELSE');
+    }
+    this.elseCount_ = 0;
+    // Disconnect all the elseif input blocks and remove the inputs.
+    for (var i = this.elseifCount_; i > 0; i--) {
+      this.removeInput('IF' + i);
+      this.removeInput('DO' + i);
+    }
+    this.elseifCount_ = 0;
+    // Rebuild the block's optional inputs.
+    while (this.elseifCount_ < elseifCount_) {
+      this.elseifCount_++;
+      var ifInput = this.appendValueInput('IF' + this.elseifCount_)
+          .setCheck('Boolean')
+          .appendField(Blockly.Msg.CONTROLS_IF_MSG_ELSEIF);
+      var doInput = this.appendStatementInput('DO' + this.elseifCount_);
+      doInput.appendField(Blockly.Msg.CONTROLS_IF_MSG_THEN);
+    }
+    while (this.elseCount_ < elseCount_) {
+      this.elseCount_++;
+      var elseInput = this.appendStatementInput('ELSE');
+      elseInput.appendField(Blockly.Msg.CONTROLS_IF_MSG_ELSE);
+    }
+  },
+  /**
    * Store pointers to any connected child blocks.
    * @param {!Blockly.Block} containerBlock Root block in mutator.
    * @this Blockly.Block
@@ -235,8 +267,8 @@ Blockly.Blocks['js_assignment_expression'] = {
    */
   init: function() {
     this.setColour(330);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setPreviousStatement(true, 'Statement');
+    this.setNextStatement(true, 'Statement');
     this.interpolateMsg(
         'set %1 %2 %3',
         ['VAR', null],
@@ -270,8 +302,8 @@ Blockly.Blocks['js_update_expression_noprefix'] = {
    */
   init: function() {
     this.setColour(230);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setPreviousStatement(true, 'Statement');
+    this.setNextStatement(true, 'Statement');
     this.interpolateMsg(
         '%1 %2',
         ['ARGUMENT', null],

@@ -1,1 +1,1 @@
-//TODO: mapper for javascript, when parse code or blocks map lines to more flexible manipulation
+//TODO: mapper for javascript, when parse code or blocks map lines to more flexible manipulation(can use the data field in xml - added in new version of blockly)

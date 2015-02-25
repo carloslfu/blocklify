@@ -49,6 +49,31 @@ Blockly.Blocks['js_literal_string'] = {
     return new Blockly.FieldImage(Blockly.pathToMedia + file, 12, 12, '"');
   }
 };
+Blockly.Blocks['js_literal_bool'] = {
+  /**
+   * Block for boolean data type: true and false.
+   * @this Blockly.Block
+   */
+  init: function() {
+    var BOOLEANS =
+        [['true', 'true'],
+         ['false', 'false']];
+    this.setColour(220);
+    this.setOutput(true, 'Boolean');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown(BOOLEANS), 'BOOL');
+    this.setTooltip(Blockly.Msg.LOGIC_BOOLEAN_TOOLTIP);
+  }
+};
+Blockly.Blocks['js_this_expression'] = {
+  init: function() {
+    this.setColour(120);
+    this.appendDummyInput()
+        .appendField('this');
+    this.setOutput(true);
+    this.setTooltip("This expression.");
+  }
+};
 //object in JSON format
 Blockly.Blocks['js_json_object'] = {
   init: function() {
@@ -121,14 +146,14 @@ Blockly.Blocks['js_variable_declaration_unary'] = {
    */
   init: function() {
     this.setColour(330);
-    this.setPreviousStatement(true, 'Declarator');
-    this.setNextStatement(true, 'Declarator');
+    this.setPreviousStatement(true, 'Statement');
+    this.setNextStatement(true, 'Statement');
     this.interpolateMsg(
         'var %1 = %2',
         ['VAR', null],
         ['VALUE', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
-    this.setTooltip('Variable declarator.');
+    this.setTooltip('Variable declarator unary.');
   }
 };
 Blockly.Blocks['js_variable_declaration'] = {
