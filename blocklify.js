@@ -30,6 +30,9 @@ goog.require('Blocklify.JavaScript');
  * @param {string} name Language name of this parser.
  * @constructor
  */
+
+Blockly.COLLAPSE_CHARS = 60;
+
 Blocklify.Renderer = function(name) {
   this.name_ = name;
 };
