@@ -45,6 +45,10 @@ The incoming features, and in develop features are in [Blocklify][trello]
 - Full SVG implemented fields for best UI. (not overlay text elements)
 - Styling API.
 
+This project uses its own version of Blockly but maintains synchronization with all its changes. This the fork of blockly that this proyect use: [Blockly-with-features][Blockly-features].
+
+[Blockly-features]: https://github.com/carloslfu/blockly/tree/with_features_zoom
+
 ### Features to be implemented in this project
 - Blocklify block for importing and exporting code into workspace.
 - Marked point in code and follow functions. (for merging changes in code)
