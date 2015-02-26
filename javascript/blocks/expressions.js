@@ -329,6 +329,8 @@ Blockly.Blocks['js_binary_expression'] = {
     this.setTooltip('Binary expression.');
   }
 };
+
+//Member expressions
 Blockly.Blocks['js_member_expression'] = {
   /**
    * Block for redering a member expression.
@@ -363,9 +365,9 @@ Blockly.Blocks['js_member_expression_container'] = {
   init: function() {
     this.setColour(240);
     this.appendDummyInput()
-        .appendField("function");
+        .appendField("member expression");
     this.appendStatementInput('STACK');
-    this.setTooltip("Add, remove or reorder arguments of the function.");
+    this.setTooltip("Add, remove or reorder members of the memeber expression.");
     this.contextMenu = false;
   }
 };
@@ -382,6 +384,67 @@ Blockly.Blocks['js_member_expression_member'] = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip("Add a member to a member expression.");
+    this.contextMenu = false;
+  }
+};
+
+//Arrays
+Blockly.Blocks['js_array_expression'] = {
+  /**
+   * Block for redering a member expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(120);
+    this.setOutput(true);
+    this.appendValueInput('ELEMENT0')
+        .appendField('[');
+    this.appendDummyInput('END')
+        .appendField(']');
+    this.setInputsInline(true);
+    this.setMutator(new Blockly.Mutator(['js_array_expression_element']));
+    this.elementCount = 1;
+    this.setTooltip('Array expression.');
+    var argMutator = {
+      name: 'clone',
+      target: 'ELEMENT',
+      mutatorContainer: 'js_array_expression_container',
+      mutatorArgument: 'js_array_expression_element',
+      elementCount: 'elementCount',
+      startText: '[',
+      endText: ']'
+    };
+    Blocklify.JavaScript.Blocks.setMutators(this,[argMutator]);
+  }
+};
+
+Blockly.Blocks['js_array_expression_container'] = {
+  /**
+   * Mutator block for function container.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(240);
+    this.appendDummyInput()
+        .appendField("array");
+    this.appendStatementInput('STACK');
+    this.setTooltip("Add, remove or reorder elements of the array.");
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_array_expression_element'] = {
+  /**
+   * Mutator block for adding members to a member expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(240);
+    this.appendDummyInput()
+        .appendField("element");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Add a element to an array expression.");
     this.contextMenu = false;
   }
 };

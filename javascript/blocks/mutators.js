@@ -4,17 +4,19 @@
 
 goog.provide('Blocklify.JavaScript.Blocks.mutators');
 
-
+// Clone mutator
 Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
   var xmlAttrName = options.target.toLowerCase() + 's';
   var elementCount = options.elementCount;
   if (!options.startText) {
     options.startText = '';
   }
+  if (!options.middleText) {
+    options.middleText = '';
+  }
   if (!options.endText) {
     options.endText = '';
   }
-
   var blockMutationToDom = block.mutationToDom;
   block.mutationToDom = function() {
     if (blockMutationToDom) {
@@ -44,7 +46,9 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
       for (var x = 0; x < this[elementCount]; x++) {
         var input = this.appendValueInput(options.target + x);
         if (x == 0) {
-          input.appendField(options.startText)
+          input.appendField(options.startText);
+        } else {
+          input.appendField(options.middleText);
         }
       }
     }
@@ -88,6 +92,8 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
       var input = this.appendValueInput(options.target + this[elementCount]);
       if (this[elementCount] == 0) {
         input.appendField(options.startText);
+      } else {
+        input.appendField(options.middleText);
       }
       // Reconnect any child blocks.
       if (argBlock.valueConnection_) {
@@ -133,6 +139,8 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
         var input = this.appendValueInput(options.target + i);
         if (i == 0) {
           input.appendField(options.startText);
+        } else {
+          input.appendField(options.middleText);
         }
       }
     }
@@ -142,7 +150,7 @@ Blocklify.JavaScript.Blocks.mutators['clone'] = function (block, options){
 };
 
 
-////
+// Switch mutator adds 'Add Output' and 'Remove Output' options in contextmenu
 Blocklify.JavaScript.Blocks.mutators['switch'] = function (block, options){
   var elementCount = options.elementCount;
 

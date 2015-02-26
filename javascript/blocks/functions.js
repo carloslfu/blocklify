@@ -32,7 +32,10 @@ Blockly.Blocks['js_function_expression'] = {
       target: 'PARAM',
       mutatorContainer: 'js_function_expression_container',
       mutatorArgument: 'js_function_expression_param',
-      elementCount: 'paramCount'
+      elementCount: 'paramCount',
+      startText: '(',
+      middleText: ',',
+      endText: ')'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator, {name: 'switch'}]);
     this.setParams = this.setElements;
@@ -98,6 +101,7 @@ Blockly.Blocks['js_anonimous_function_expression'] = {
       mutatorArgument: 'js_function_expression_param',
       elementCount: 'paramCount',
       startText: '(',
+      middleText: ',',
       endText: ')'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator, {name: 'switch'}]);
@@ -196,6 +200,7 @@ Blockly.Blocks['js_call_expression'] = {
       mutatorArgument: 'js_call_expression_argument',
       elementCount: 'argCount',
       startText: '(',
+      middleText: ',',
       endText: ')'
     };
     Blocklify.JavaScript.Blocks.setMutators(this,[argMutator, {name: 'switch'}]);

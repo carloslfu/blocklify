@@ -82,8 +82,7 @@ Blockly.Blocks['js_json_object'] = {
     this.appendDummyInput()
           .appendField('object');
     this.appendStatementInput('ELEMENTS')
-          .setCheck('js_json_element')
-          .appendField('elements');
+          .setCheck('js_json_element');
     this.setTooltip('Object in JSON format.');
   }
 };

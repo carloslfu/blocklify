@@ -64,7 +64,7 @@ var delete_all_blocks = function() {
 var parse_code = function () {
 	delete_all_blocks();
 	var javascript_code = document.getElementById('code').value;
-	Blocklify.JavaScript.Parser.parse(javascript_code, Blockly.getMainWorkspace());
+	Blocklify.JavaScript.Parser.parse(javascript_code, Blockly.getMainWorkspace(), 'atomic');
 };
 var parse_blocks = function () {
 	var output = document.getElementById('code');

@@ -31,15 +31,15 @@ goog.require('Blocklify.JavaScript');
  * @constructor
  */
 
-Blockly.COLLAPSE_CHARS = 60;
+Blockly.COLLAPSE_CHARS = 100;
 
 Blocklify.Renderer = function(name) {
   this.name_ = name;
 };
 
-Blocklify.Renderer.prototype.parse = function(code, workspace) {
+Blocklify.Renderer.prototype.parse = function(code, workspace, level) {
 	var program = this.parser(code);
-	this.render(program, null, workspace);
+	this.render(program, null, workspace, level);
 };
 
 /**

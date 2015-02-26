@@ -63,6 +63,7 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_update_expression_noprefix"></block>' +
       '<block type="js_binary_expression"></block>' +
       '<block type="js_member_expression"></block>' +
+      '<block type="js_array_expression"></block>' +
     '</category>' +
     '<category name="Functions">' +
       '<block type="js_function_expression"></block>' +

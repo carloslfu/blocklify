@@ -49,23 +49,30 @@ Blocklify.JavaScript.Parser.force_output = function (block) {
 		}
 	}
 }
-
+Blocklify.JavaScript.Parser.render = function (node, parent, workspace, level) {
+	switch (level) {
+		case 'atomic':
+			Blocklify.JavaScript.Parser.render_atomic(node, parent, workspace);
+			break;
+	}
+};
+Blocklify.JavaScript.Parser.notimplementedblockmsg = function (node) {
+	var block = Blockly.Block.obtain(workspace ,"js_notimplemented");
+	block.initSvg();
+	block.render();
+	console.log("not yet implemented node:");
+	console.log(node);
+	return block;
+}
 /**
- * Function to render the nodes to blocks.
+ * Function to render the nodes to blocks in level: atomic.
  */
-Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
+Blocklify.JavaScript.Parser.render_atomic = function (node, parent, workspace) {
 	//the return block
 	var block = {};
 	//none-estetic inline blocks
 	var no_inline_blocks = ["FunctionExpression", "ObjectExpression"];
 	//warn for incompatibility of blockly with JS language or not implemented feature
-	function notimplementedblockmsg (node) {
-		block = Blockly.Block.obtain(workspace ,"js_notimplemented");
-		block.initSvg();
-		block.render();
-		console.log("not yet implemented node:");
-		console.log(node);
-	}
   if (node == null) {
     block = Blockly.Block.obtain(workspace ,"js_undefined_value");
     block.initSvg();
@@ -76,7 +83,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "Program": case "BlockStatement":
 			var blocks = [], index = 0, tempBlock;
 			node.body.forEach(function (element) {
-				tempBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
+				tempBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
 				//ignore EmptyStatement
 				if (tempBlock != "EmptyStatement") {
 					blocks[index] = tempBlock;
@@ -95,7 +102,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			}
 			break;
 		case "ExpressionStatement":
-			block = Blocklify.JavaScript.Parser.render(node.expression, node, workspace);
+			block = Blocklify.JavaScript.Parser.render_atomic(node.expression, node, workspace);
 			break;
 		case "Literal":
 			if (node.value == null) {
@@ -119,8 +126,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "AssignmentExpression":
 			block = Blockly.Block.obtain(workspace ,"js_assignment_expression");
-			var leftBlock = Blocklify.JavaScript.Parser.render(node.left, node, workspace);
-			var rightBlock = Blocklify.JavaScript.Parser.render(node.right, node, workspace);
+			var leftBlock = Blocklify.JavaScript.Parser.render_atomic(node.left, node, workspace);
+			var rightBlock = Blocklify.JavaScript.Parser.render_atomic(node.right, node, workspace);
 			//fix estetic, only literal has inline
 			if (no_inline_blocks.indexOf(node.right.type) != -1) {
 				block.setInputsInline(false);
@@ -135,8 +142,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "VariableDeclarator"://TODO: do the variable declarator block
 			block = Blockly.Block.obtain(workspace ,"js_variable_declarator");
-			var initBlock = Blocklify.JavaScript.Parser.render(node.init, node, workspace);
-			var varBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
+			var initBlock = Blocklify.JavaScript.Parser.render_atomic(node.init, node, workspace);
+			var varBlock = Blocklify.JavaScript.Parser.render_atomic(node.id, node, workspace);
 			//fix estetic, only literal has inline
 		      if (node.init) {
 		  			if (no_inline_blocks.indexOf(node.init.type) != -1) {
@@ -153,8 +160,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "VariableDeclaration":
 			if (node.declarations.length == 1) {
 				block = Blockly.Block.obtain(workspace ,"js_variable_declaration_unary");
-				var initBlock = Blocklify.JavaScript.Parser.render(node.declarations[0].init, node.declarations[0], workspace);
-				var varBlock = Blocklify.JavaScript.Parser.render(node.declarations[0].id, node.declarations[0], workspace);
+				var initBlock = Blocklify.JavaScript.Parser.render_atomic(node.declarations[0].init, node.declarations[0], workspace);
+				var varBlock = Blocklify.JavaScript.Parser.render_atomic(node.declarations[0].id, node.declarations[0], workspace);
 				//fix estetic, only literal has inline
 			      if (node.declarations[0].init) { //TODO: make global variable for none-estetic inline blocks
 			  			if (no_inline_blocks.indexOf(node.declarations[0].init.type) != -1) {
@@ -169,7 +176,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			} else {
 				var blocks = [];
 				node.declarations.forEach(function (element, index) {
-					blocks[index] = Blocklify.JavaScript.Parser.render(element, node, workspace);
+					blocks[index] = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
 					//connect the block to the previous block
 					if (index != 0) {
 						blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
@@ -185,11 +192,11 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block = Blockly.Block.obtain(workspace ,"js_call_expression");
 			block.initSvg();
 			block.render();
-			var nameBlock = Blocklify.JavaScript.Parser.render(node.callee, node, workspace);
+			var nameBlock = Blocklify.JavaScript.Parser.render_atomic(node.callee, node, workspace);
 			var inlineFlag = false;
 			block.setArguments(node.arguments.length);
 			node.arguments.forEach(function (element, index){
-				var argBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
+				var argBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(argBlock);
 				block.getInput('ARGUMENT' + index).connection.connect(argBlock.outputConnection);
 				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
@@ -202,17 +209,17 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "FunctionExpression":
 			if (node.id != null) {
 				block = Blockly.Block.obtain(workspace ,"js_function_expression");
-				var nameBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
+				var nameBlock = Blocklify.JavaScript.Parser.render_atomic(node.id, node, workspace);
 			} else {
 				block = Blockly.Block.obtain(workspace ,"js_anonimous_function_expression");
 			}
-			var stackBlock = Blocklify.JavaScript.Parser.render(node.body, node, workspace);
+			var stackBlock = Blocklify.JavaScript.Parser.render_atomic(node.body, node, workspace);
 			var inlineFlag = false;
 			block.initSvg();
 			block.render();
 			block.setParams(node.params.length);
 			node.params.forEach(function (element, index){
-				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
+				var paramBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(paramBlock);
 				block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
 				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
@@ -229,15 +236,15 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "FunctionDeclaration":
 			block = Blockly.Block.obtain(workspace ,"js_function_expression");
-			var nameBlock = Blocklify.JavaScript.Parser.render(node.id, node, workspace);
-			var stackBlock = Blocklify.JavaScript.Parser.render(node.body, node, workspace);
+			var nameBlock = Blocklify.JavaScript.Parser.render_atomic(node.id, node, workspace);
+			var stackBlock = Blocklify.JavaScript.Parser.render_atomic(node.body, node, workspace);
 			var inlineFlag = false;
 			block.initSvg();
 			block.render();
       		block.setOutput_(false);
 			block.setParams(node.params.length);
 			node.params.forEach(function (element, index){
-				var paramBlock = Blocklify.JavaScript.Parser.render(element, node, workspace);
+				var paramBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(paramBlock);
 				block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
 				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
@@ -256,7 +263,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "Identifier":
 			if(parent.type == "MemberExpression" && parent.computed) {
 				block = Blockly.Block.obtain(workspace ,"js_computed_member_expression");
-				var memberBlock = Blocklify.JavaScript.Parser.render(node, node, workspace);
+				var memberBlock = Blocklify.JavaScript.Parser.render_atomic(node, node, workspace);
 				block.getInput('MEMBER').connection.connect(memberBlock.outputConnection);
 			} else if (node.name == 'undefined') {
 				block = Blockly.Block.obtain(workspace ,"js_undefined_value");
@@ -278,7 +285,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			for (var i = count-1, current_node = node; i >= 0; i--) {
 				//condition for final node
 				member = (i == 0)?current_node:current_node.property;
-				memberBlock = Blocklify.JavaScript.Parser.render(member, parentM, workspace);
+				memberBlock = Blocklify.JavaScript.Parser.render_atomic(member, parentM, workspace);
+				Blocklify.JavaScript.Parser.force_output(memberBlock);
 				block.getInput('MEMBER' + i).connection.connect(memberBlock.outputConnection);
 				current_node = current_node.object;
 				parentM = current_node;
@@ -288,7 +296,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "ReturnStatement":
 			block = Blockly.Block.obtain(workspace ,"js_return_statement");
-			var argBlock = Blocklify.JavaScript.Parser.render(node.argument, node, workspace);
+			var argBlock = Blocklify.JavaScript.Parser.render_atomic(node.argument, node, workspace);
 			Blocklify.JavaScript.Parser.force_output(argBlock);
 			block.initSvg();
 			block.getInput('VALUE').connection.connect(argBlock.outputConnection);
@@ -300,7 +308,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			} else {
 				block = Blockly.Block.obtain(workspace ,"js_update_expression_noprefix");
 			}
-			var argBlock = Blocklify.JavaScript.Parser.render(node.argument, node, workspace);
+			var argBlock = Blocklify.JavaScript.Parser.render_atomic(node.argument, node, workspace);
 			block.setFieldValue(node.operator, 'OPERATOR');
 			block.initSvg();
 			block.getInput('ARGUMENT').connection.connect(argBlock.outputConnection);
@@ -308,8 +316,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			break;
 		case "BinaryExpression":
 			block = Blockly.Block.obtain(workspace ,"js_binary_expression");
-			var leftBlock = Blocklify.JavaScript.Parser.render(node.left, node, workspace);
-			var rightBlock = Blocklify.JavaScript.Parser.render(node.right, node, workspace);
+			var leftBlock = Blocklify.JavaScript.Parser.render_atomic(node.left, node, workspace);
+			var rightBlock = Blocklify.JavaScript.Parser.render_atomic(node.right, node, workspace);
 			Blocklify.JavaScript.Parser.force_output(rightBlock);
 			Blocklify.JavaScript.Parser.force_output(leftBlock);
 			block.setFieldValue(node.operator, 'OPERATOR');
@@ -327,8 +335,8 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			  	}
 				blocks[index].initSvg();
 				blocks[index].render();
-				var key = Blocklify.JavaScript.Parser.render(element.key, node, workspace);
-				var value = Blocklify.JavaScript.Parser.render(element.value, node, workspace);
+				var key = Blocklify.JavaScript.Parser.render_atomic(element.key, node, workspace);
+				var value = Blocklify.JavaScript.Parser.render_atomic(element.value, node, workspace);
 				Blocklify.JavaScript.Parser.force_output(key);
 				Blocklify.JavaScript.Parser.force_output(value);
 				blocks[index].getInput('KEY').connection.connect(key.outputConnection);
@@ -346,19 +354,19 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 		case "IfStatement":
 			block = Blockly.Block.obtain(workspace ,"js_if_statement");
 			var tests = [], consequents = [], current_node = node.alternate, countElseIf = 0, countElse = 0;
-			tests.push(Blocklify.JavaScript.Parser.render(node.test, node, workspace));
-			consequents.push(Blocklify.JavaScript.Parser.render(node.consequent, node, workspace));
+			tests.push(Blocklify.JavaScript.Parser.render_atomic(node.test, node, workspace));
+			consequents.push(Blocklify.JavaScript.Parser.render_atomic(node.consequent, node, workspace));
 			Blocklify.JavaScript.Parser.force_output(tests[0]);
 			while (current_node) {
 				if (current_node.type == 'IfStatement') {
 					countElseIf++;
-					tests.push(Blocklify.JavaScript.Parser.render(current_node.test, current_node, workspace));
+					tests.push(Blocklify.JavaScript.Parser.render_atomic(current_node.test, current_node, workspace));
 					Blocklify.JavaScript.Parser.force_output(tests[tests.length-1]);
-					consequents.push(Blocklify.JavaScript.Parser.render(current_node.consequent, current_node, workspace));
+					consequents.push(Blocklify.JavaScript.Parser.render_atomic(current_node.consequent, current_node, workspace));
 					current_node = current_node.alternate;
 				} else {
 					countElse = 1;
-					var alternate = Blocklify.JavaScript.Parser.render(current_node.alternate || current_node, node, workspace);
+					var alternate = Blocklify.JavaScript.Parser.render_atomic(current_node.alternate || current_node, node, workspace);
 					current_node = null;
 				}
 			};
@@ -380,9 +388,25 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace) {
 			block.initSvg();
 			block.render();
 			break;
-			// if not implemented block
-		default:
-			notimplementedblockmsg(node);
+		case "ArrayExpression":
+			block = Blockly.Block.obtain(workspace ,"js_array_expression");
+			var inlineFlag = false;
+			block.initSvg();
+			block.render();
+			block.setElements(node.elements.length);
+			node.elements.forEach(function (element, index){
+				var elementBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
+				Blocklify.JavaScript.Parser.force_output(elementBlock);
+				block.getInput('ELEMENT' + index).connection.connect(elementBlock.outputConnection);
+				inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
+			});
+			if (inlineFlag) {
+				block.setInputsInline(false);
+			}
+			break;
+		
+		default:  // if not implemented block
+			block = Blocklify.JavaScript.Parser.notimplementedblockmsg(node);
 	}
 	return block;
-}
+};
