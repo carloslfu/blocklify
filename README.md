@@ -33,7 +33,7 @@ The incoming features, and in develop features are in [Blocklify][trello]
 
 ### Features to be implemented in [Blockly][blockly-git] needed for this project
 - PointerEvents support for IE10-11 support.
-- [Zooming][Zooming]. (yet - not merged - needs to be revised and improved)
+- [Zooming][Zooming]. (ready - not merged - needs to be revised and improved)
 - Multiple block selection.
 - Multitouch support. (Maybe a full PointerEvents implementation + [polyfills][PEP])
 - Floating group field.
