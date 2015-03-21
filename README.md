@@ -29,7 +29,7 @@ Just add blocklify_compressed.js file to your code (See the demo in demos folder
 
 ##Develop
 
-Develop is in refactoring.
+**State**: stand by.
 
 The incoming features, and in develop features are in [Blocklify][trello]
 [trello]: https://trello.com/b/IhdIln7f/blocklify
