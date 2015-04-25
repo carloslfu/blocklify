@@ -2,7 +2,9 @@
 
 Is an extension of [Blockly][blockly] for show code in blocks and generate the same code(ideally). The main idea is make a embeddable block editor for the most common text editors like sublime, brackets or any text scripting tool. The way for do that is make blocks for each language that represent the language, this helps to show code in blocks and generate code from blocks.
 
-I'm now working in [BBlocks][BBlocks-git] a more flexible GUI for this proyect, while reaching a stable version this project will be in stand by. This proyect will be renamed and refactored. This will be a full editor for embedded visual programing.
+See the [BB editor][bb-editor-git] research project page.
+
+[bb-editor-git]: https://github.com/carloslfu/BB-editor
 
 A [live demo][livedemo].
 [livedemo]: https://carloslfu.github.io/blocklify/demo/
@@ -29,8 +31,6 @@ Just add blocklify_compressed.js file to your code (See the demo in demos folder
 
 ##Develop
 
-**State**: stand by.
-
 The incoming features, and in develop features are in [Blocklify][trello]
 [trello]: https://trello.com/b/IhdIln7f/blocklify
 
@@ -50,11 +50,10 @@ Feel free to contribute. This is the workflow to make a contribution:
 - Test and debug it in tests/playground/index.html page.
 - Make a pull request describing what you have done.
 
-For make support for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the proyect structure.
+For make support for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the project structure.
 [acorn]: http://marijnhaverbeke.nl/acorn/
 Pull your hacks :)
 
-If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [BBlocks][BBlocks-git] reporting the bug or pulling your patch.
+If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly repo][blockly-git] reporting the bug or pulling your patch.
 
 [blockly-git]: https://github.com/google/blockly
-[BBlocks-git]: https://github.com/carloslfu/BBlocks.js
