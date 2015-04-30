@@ -20,6 +20,9 @@
  */
 'use strict';
 
+// TODOs:
+//  - Support for: UnaryExpression, NewExpression, LogicalExpression, ThrowStatement
+
 goog.provide('Blocklify.JavaScript.Parser');
 
 /**
@@ -56,7 +59,7 @@ Blocklify.JavaScript.Parser.render = function (node, parent, workspace, level) {
 			break;
 	}
 };
-Blocklify.JavaScript.Parser.notimplementedblockmsg = function (node) {
+Blocklify.JavaScript.Parser.notimplementedblockmsg = function (node, workspace) {
 	var block = Blockly.Block.obtain(workspace ,"js_notimplemented");
 	block.initSvg();
 	block.render();
@@ -406,7 +409,7 @@ Blocklify.JavaScript.Parser.render_atomic = function (node, parent, workspace) {
 			break;
 		
 		default:  // if not implemented block
-			block = Blocklify.JavaScript.Parser.notimplementedblockmsg(node);
+			block = Blocklify.JavaScript.Parser.notimplementedblockmsg(node, workspace);
 	}
 	return block;
 };
