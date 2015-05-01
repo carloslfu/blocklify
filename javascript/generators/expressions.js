@@ -75,7 +75,7 @@ Blocklify.JavaScript.Generator['js_member_expression'] = function(block) {
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
   }
   var code = members.join('.');
-  return [code, Blocklify.JavaScript.Generator.ORDER_TYPEOF];
+  return [code, Blocklify.JavaScript.Generator.ORDER_MEMBER];
   if (block.outputConnection) {
     return [code, OPERATORS[operator]];
   } else {
