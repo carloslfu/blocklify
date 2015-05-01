@@ -67,3 +67,18 @@ Blocklify.JavaScript.Generator['js_binary_expression'] = function(block) {
     return code + ';\n';
   }
 };
+
+Blocklify.JavaScript.Generator['js_member_expression'] = function(block) {
+  var members = [];
+  for (var i = 0; i < block.memberCount; i++) {
+    members[i] = Blocklify.JavaScript.Generator.valueToCode(block, 'MEMBER' + i,
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  }
+  var code = members.join('.');
+  return [code, Blocklify.JavaScript.Generator.ORDER_TYPEOF];
+  if (block.outputConnection) {
+    return [code, OPERATORS[operator]];
+  } else {
+    return code + ';\n';
+  }
+};
