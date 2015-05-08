@@ -25,6 +25,8 @@
  */
 goog.provide('Blocklify.JavaScript');
 
+Blocklify.JavaScript.astParser = acorn;
+
 Blocklify.JavaScript.toolbox =
   '<xml id="toolbox" style="display: none">' +
     '<category name="Variables">' +

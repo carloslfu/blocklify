@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Helper functions for generate parsers from any language to blocks.
+ * @fileoverview Helper functions for generate parsers from any language to blocks (Dont use renderer - outdated).
  * @author carloslfu@gmail.com (Carlos Galarza)
  */
 'use strict';
@@ -32,6 +32,17 @@ goog.require('Blocklify.JavaScript');
  */
 
 Blockly.COLLAPSE_CHARS = 100;
+
+Blocklify.importer = function(name) {
+  this.name_ = name;
+};
+
+Blocklify.importer.prototype.codeToDom = function(code, level) {
+	var program = this.astParser.parse(code);
+	return this.convert(program, null, level);
+};
+
+// Renderer class DEPRECATED
 
 Blocklify.Renderer = function(name) {
   this.name_ = name;

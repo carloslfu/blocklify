@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Helper functions for parse from Javascript to Blockly blocks.
+ * @fileoverview Helper functions for parse from Javascript to Blockly blocks (This is deprecated, now the way is produce xml of blocks).
  * @author carloslfu@gmail.com (Carlos Galarza)
  */
 'use strict';
