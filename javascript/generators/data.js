@@ -16,16 +16,16 @@ Blocklify.JavaScript.Generator['js_undefined_value'] = function(block) {
 };
 Blocklify.JavaScript.Generator['js_json_object'] = function(block) {
   var elements = Blocklify.JavaScript.Generator.statementToCode(block, 'ELEMENTS');
-  var code = ' {\n' +
+  var code = ' {' + ((elements != '')?'\n':'') +
       elements + '}';
   return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };
-Blocklify.JavaScript.Generator['js_json_element'] = function(block) {
+Blocklify.JavaScript.Generator['js_json_element'] = function(block, context) {
   var key = Blocklify.JavaScript.Generator.valueToCode(block, 'KEY',
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
   var value = Blocklify.JavaScript.Generator.valueToCode(block, 'VALUE',
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
-  var code =  key + ' : ' + value + ',\n';
+  var code =  key + ': ' + value + ',\n';
   return code;
 };
 Blocklify.JavaScript.Generator['js_identifier'] = function(block) {
