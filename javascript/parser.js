@@ -351,7 +351,9 @@ Blocklify.JavaScript.Parser.render_atomic = function (node, parent, workspace) {
 			});
 			block = Blockly.Block.obtain(workspace ,"js_json_object");
 			block.initSvg();
-			block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
+			if (blocks.length > 0) {
+				block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
+			}
 			block.render();
 			break;
 		case "IfStatement":
