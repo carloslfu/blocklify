@@ -25,11 +25,14 @@ A [live demo][livedemo].
 Supported languages:
 - JavaScript. (partially - in develop)
 
-##Usage
+## Getting started
 
 Just add blocklify_compressed.js file to your code (See the demo in demos folder).
 
-##Develop
+## Develop
+
+Proyect details in the [documentation page][docs-page].
+[docs-page]: https://github.com/carloslfu/blocklify/blob/master/DOCS.md
 
 The incoming features, and in develop features are in [Blocklify][trello]
 [trello]: https://trello.com/b/IhdIln7f/blocklify
