@@ -2,6 +2,8 @@
 
 ## Architecture
 
+For each language supported.
+
 ![architecture](https://github.com/carloslfu/blocklify/blob/master/architecture.jpg)
 
 ### Atomic converter
@@ -10,7 +12,7 @@ Atomic blocks are the representation of the target language, all features should
 
 ### Pattern converter
 
-Patterns are blocks that represents high level abstractions of the code, for example the blockly core blocks or your own custom blocks. This feature is not yet implemented, work in progress.
+Patterns are blocks that represents high level abstractions of the code, for example the blockly core blocks or your own custom blocks. This allows importing code patterns in your custom blocks. This feature is not yet implemented, work in progress.
 
 ### Mixed converter
 
