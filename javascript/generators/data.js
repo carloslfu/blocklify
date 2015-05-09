@@ -8,6 +8,10 @@ Blocklify.JavaScript.Generator['js_literal_string'] = function(block) {
   var code = Blocklify.JavaScript.Generator.quote_(block.getFieldValue('STRING'));
   return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };
+Blocklify.JavaScript.Generator['js_literal_bool'] = function(block) {
+  var code = block.getFieldValue('BOOL');
+  return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
+};
 Blocklify.JavaScript.Generator['js_null_value'] = function(block) {
   return ['null', Blocklify.JavaScript.Generator.ORDER_ATOMIC];
 };

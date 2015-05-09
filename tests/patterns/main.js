@@ -19,16 +19,17 @@
  * @author carloslfu@gmail.com (Carlos Galarza)
  */
 'use strict';
+var mainWorkspace;
 var onload = function() {
   var toolbox_div = document.createElement('div');
   //Loads toolbox for JavaScript
   toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
   document.body.appendChild(toolbox_div);
-  Blockly.inject(document.getElementById('blocklyDiv'),
+  mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
           {toolbox: document.getElementById('toolbox'), media: "../../blockly/media/"});
 }
 var delete_all_blocks = function() {
-	Blockly.getMainWorkspace().getAllBlocks().forEach(function (el) {
+	mainWorkspace.getAllBlocks().forEach(function (el) {
 		el.dispose(true, false);
 	});
 };
@@ -37,10 +38,10 @@ var parse_code = function () {
 	delete_all_blocks();
 	var javascript_code = document.getElementById('code').value;
 	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'atomic');
-	Blockly.Xml.domToWorkspace(Blockly.getMainWorkspace(), xmlDom);
+	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
 };
 
 var parse_blocks = function () {
 	var output = document.getElementById('code');
-  	output.value = Blocklify.JavaScript.Generator.workspaceToCode();
+  	output.value = Blocklify.JavaScript.Generator.workspaceToCode(mainWorkspace);
 };

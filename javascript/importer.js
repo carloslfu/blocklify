@@ -23,7 +23,7 @@
 // TODOs:
 //  - Support for: UnaryExpression, NewExpression, LogicalExpression, ThrowStatement
 
-goog.provide('Blocklify.JavaScript.xmlConverter');
+goog.provide('Blocklify.JavaScript.importer');
 
 /**
  * JavaScript AST to blockls XML parser.
@@ -35,27 +35,39 @@ Blocklify.JavaScript.importer.astParser = Blocklify.JavaScript.astParser;
 /**
  * Function to force output to a block.
  */
-Blocklify.JavaScript.importer.force_output = function (block) {
+Blocklify.JavaScript.importer.force_output = function(block) {
   //force output
   block.setAttribute('output', 'true');
 }
-Blocklify.JavaScript.importer.convert = function (node, parent, level) {
+Blocklify.JavaScript.importer.convert = function(node, parent, level) {
   switch (level) {
     case 'atomic':
       return Blocklify.JavaScript.importer.convert_atomic(node, parent);
+    case 'pattern':
+      return Blocklify.JavaScript.importer.convert_pattern(node, parent);
   }
 };
-Blocklify.JavaScript.importer.notimplementedblockmsg = function (node) {
+Blocklify.JavaScript.importer.notimplementedblockmsg = function(node) {
   var block = goog.dom.createDom('block');
   block.setAttribute('type', 'js_notimplemented');
   console.log("not yet implemented node:");
   console.log(node);
   return block;
-}
+};
+Blocklify.JavaScript.importer.appendField = function(block, name, value) {
+  var field = goog.dom.createDom('field', null, value);
+  field.setAttribute('name', name);
+  block.appendChild(field);
+};
+Blocklify.JavaScript.importer.appendValueInput = function(block, name, blockValue) {
+  var field = goog.dom.createDom('value', null, blockValue);
+  field.setAttribute('name', name);
+  block.appendChild(field);
+};
 /**
- * Function to render the nodes to blocks in level: atomic.
+ * Function to convert the nodes to xml blocks at atomic level.
  */
-Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
+Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
   //the return block
   var block = {}, field;
   //none-estetic inline blocks
@@ -72,14 +84,17 @@ Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
       if (node.body.length == 0) {
         break;
       }
-      var index = 0, tempBlock, lastBlock;
+      var index = 0, tempBlock, lastBlock, statementBlock;
       lastBlock = Blocklify.JavaScript.importer.convert_atomic(node.body[0]);
       block.appendChild(lastBlock);
       for (var i = 1; i < node.body.length; i++) {
         tempBlock = goog.dom.createDom('next');
-        tempBlock.appendChild(Blocklify.JavaScript.importer.convert_atomic(node.body[i]));
-        lastBlock.appendChild(tempBlock);
-        lastBlock = tempBlock;
+        statementBlock = Blocklify.JavaScript.importer.convert_atomic(node.body[i]);
+        if (statementBlock != 'Ignore') {
+          tempBlock.appendChild(statementBlock);
+          lastBlock.appendChild(tempBlock);
+          lastBlock = tempBlock;
+        }
       };
       break;
     case "ExpressionStatement":
@@ -90,37 +105,34 @@ Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
       if (node.value == null) {
         block.setAttribute('type' ,"js_null_value");
       } else {
-        if (typeof(node.value) == "number") {
+        var nodeType = typeof(node.value);
+        if (nodeType == "number") {
           block.setAttribute('type' ,'js_literal_number');
-          field = goog.dom.createDom('field', null, node.value + '');
-          field.setAttribute('name', 'NUMBER');
-          block.appendChild(field);
-        } else if(typeof(node.value) == "string") {
-          block = Blockly.Block.obtain(workspace ,"js_literal_string");
-          block.setFieldValue(node.value, 'STRING');
-        } else if(typeof(node.value) == "boolean") {
-          block = Blockly.Block.obtain(workspace ,"js_literal_bool");
-          // temporal hack while block.getIput('BOOL') don't work properly.
-          block.inputList[0].fieldRow[0].value_ = node.raw;
-          block.inputList[0].fieldRow[0].text_ = node.raw;
+          Blocklify.JavaScript.importer.appendField(block, 'NUMBER', node.value + '');
+        } else if(nodeType == "string") {
+          block.setAttribute('type' ,'js_literal_string');
+          Blocklify.JavaScript.importer.appendField(block, 'STRING', node.value);
+        } else if(nodeType == "boolean") {
+          block.setAttribute('type' ,'js_literal_bool');
+          Blocklify.JavaScript.importer.appendField(block, 'BOOL', node.raw);
         }
       }
       break;
     case "AssignmentExpression":
-      block = Blockly.Block.obtain(workspace ,"js_assignment_expression");
-      var leftBlock = Blocklify.JavaScript.Parser.render_atomic(node.left, node, workspace);
-      var rightBlock = Blocklify.JavaScript.Parser.render_atomic(node.right, node, workspace);
+      block = goog.dom.createDom('block');
+      block.setAttribute('type', 'js_assignment_expression');
+      var leftBlock = Blocklify.JavaScript.importer.convert_atomic(node.left, node);
+      var rightBlock = Blocklify.JavaScript.importer.convert_atomic(node.right, node);
       //fix estetic, only literal has inline
       if (no_inline_blocks.indexOf(node.right.type) != -1) {
-        block.setInputsInline(false);
+        block.setAttribute('inline', 'false');
       }
-      block.setFieldValue(node.operator, 'OPERATOR');
       //force output
-      Blocklify.JavaScript.Parser.force_output(rightBlock);
-      block.initSvg();
-      block.getInput('VAR').connection.connect(leftBlock.outputConnection);
-      block.getInput('VALUE').connection.connect(rightBlock.outputConnection);
-      block.render();
+      leftBlock.setAttribute('output', 'true');
+      rightBlock.setAttribute('output', 'true');
+      Blocklify.JavaScript.importer.appendValueInput(block, 'VAR', leftBlock);
+      Blocklify.JavaScript.importer.appendField(block, 'OPERATOR', node.operator);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', rightBlock);
       break;
     case "VariableDeclarator"://TODO: do the variable declarator block
       block = Blockly.Block.obtain(workspace ,"js_variable_declarator");
@@ -239,22 +251,21 @@ Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
         block.getInput('STACK').connection.connect(stackBlock.previousConnection);
       }
       break;
-    case "EmptyStatement":
-      block = "EmptyStatement";
+    case 'EmptyStatement':
+      block = 'Ignore'; // Ignore EmptyStatement
       break;
-    case "Identifier":
-      if(parent.type == "MemberExpression" && parent.computed) {
+    case 'Identifier':
+      if(parent.type == 'MemberExpression' && parent.computed) {
         block = Blockly.Block.obtain(workspace ,"js_computed_member_expression");
         var memberBlock = Blocklify.JavaScript.Parser.render_atomic(node, node, workspace);
         block.getInput('MEMBER').connection.connect(memberBlock.outputConnection);
       } else if (node.name == 'undefined') {
         block = Blockly.Block.obtain(workspace ,"js_undefined_value");
       } else {
-        block = Blockly.Block.obtain(workspace ,"js_identifier");
-        block.setFieldValue(node.name, 'NAME');
+        block = goog.dom.createDom('block');
+        block.setAttribute('type', 'js_identifier');
+        Blocklify.JavaScript.importer.appendField(block, 'NAME', node.name);
       }
-      block.initSvg();
-      block.render();
       break;
     case "MemberExpression":
       var current_node = node, count = 2, memberBlock, member, parentM = node;
@@ -379,7 +390,7 @@ Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
       block.render();
       block.setElements(node.elements.length);
       node.elements.forEach(function (element, index){
-        var elementBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
+        var elementBlock = Blocklify.JavaScript.Parser.render_atomic(element, node);
         Blocklify.JavaScript.Parser.force_output(elementBlock);
         block.getInput('ELEMENT' + index).connection.connect(elementBlock.outputConnection);
         inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
@@ -390,7 +401,15 @@ Blocklify.JavaScript.importer.convert_atomic = function (node, parent) {
       break;
     
     default:  // if not implemented block
-      block = Blocklify.JavaScript.Parser.notimplementedblockmsg(node, workspace);
+      block = Blocklify.JavaScript.Parser.notimplementedblockmsg(node);
   }
+  return block;
+};
+/**
+ * Function to convert the nodes to xml blocks at high level (code patterns matching).
+ */
+Blocklify.JavaScript.importer.convert_pattern = function(node, parent) {
+  block = goog.dom.createDom('xml');
+  block.appendChild(Blocklify.JavaScript.Parser.notimplementedblockmsg(node));
   return block;
 };
