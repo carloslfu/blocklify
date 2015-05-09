@@ -55,14 +55,22 @@ Blocklify.JavaScript.Generator['js_variable_declarator'] = function(block) {
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
   var value = Blocklify.JavaScript.Generator.valueToCode(block, 'VALUE',
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
-  return ' ' + variable + ' = ' + value + ',';
+  if (value == 'undefined') {
+    return ' ' + variable + ',';
+  } else {
+    return ' ' + variable + ' = ' + value + ',';
+  }
 };
 Blocklify.JavaScript.Generator['js_variable_declaration_unary'] = function(block) {
   var variable = Blocklify.JavaScript.Generator.valueToCode(block, 'VAR',
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
   var value = Blocklify.JavaScript.Generator.valueToCode(block, 'VALUE',
       Blocklify.JavaScript.Generator.ORDER_ATOMIC);
-  return 'var ' + variable + ' = ' + value + ';\n';
+  if (value == 'undefined') {
+    return 'var ' + variable + ';\n';
+  } else {
+    return 'var ' + variable + ' = ' + value + ';\n';
+  }
 };
 Blocklify.JavaScript.Generator['js_variable_declaration'] = function(block) {
   var declarations = Blocklify.JavaScript.Generator.statementToCode(block, 'DECLARATIONS');
