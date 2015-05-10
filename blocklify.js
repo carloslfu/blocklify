@@ -41,24 +41,3 @@ Blocklify.importer.prototype.codeToDom = function(code, level) {
 	var program = this.astParser.parse(code);
 	return this.convert(program, null, level);
 };
-
-// Renderer class DEPRECATED
-
-Blocklify.Renderer = function(name) {
-  this.name_ = name;
-};
-
-Blocklify.Renderer.prototype.parse = function(code, workspace, level) {
-	var program = this.parser(code);
-	this.render(program, null, workspace, level);
-};
-
-/**
- * Function to parse the code to object nodes.
- */
-Blocklify.Renderer.prototype.parser = null;
-
-/**
- * Function to render the nodes to blocks.
- */
-Blocklify.Renderer.prototype.render = null;

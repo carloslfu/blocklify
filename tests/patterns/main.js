@@ -19,7 +19,9 @@
  * @author carloslfu@gmail.com (Carlos Galarza)
  */
 'use strict';
+
 var mainWorkspace;
+
 var onload = function() {
   var toolbox_div = document.createElement('div');
   //Loads toolbox for JavaScript
@@ -27,7 +29,8 @@ var onload = function() {
   document.body.appendChild(toolbox_div);
   mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
           {toolbox: document.getElementById('toolbox'), media: "../../blockly/media/"});
-}
+};
+
 var delete_all_blocks = function() {
 	mainWorkspace.getAllBlocks().forEach(function (el) {
 		el.dispose(true, false);

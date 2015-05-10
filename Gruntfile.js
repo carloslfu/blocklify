@@ -13,7 +13,6 @@ module.exports = function (grunt) {
                     'blocklify.js',
                     'javascript/javascript.js',
                     'javascript/generator.js',
-                    'javascript/parser.js', // deprecated
                     'javascript/importer.js',
                     'javascript/blocks.js',
                     'javascript/mapper.js',
