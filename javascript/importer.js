@@ -21,7 +21,7 @@
 'use strict';
 
 // TODOs:
-//  - Support for: UnaryExpression, NewExpression, LogicalExpression, ThrowStatement
+//  - Support for: NewExpression, LogicalExpression, ThrowStatement, UnaryExpression, ForStatement (how is best?).
 
 goog.provide('Blocklify.JavaScript.importer');
 
@@ -33,7 +33,7 @@ Blocklify.JavaScript.importer = new Blocklify.importer('JavaScript');
 
 Blocklify.JavaScript.importer.astParser = Blocklify.JavaScript.astParser;
 
-
+//none-estetic inline blocks
 Blocklify.JavaScript.importer.no_inline_atomic_blocks = ["FunctionExpression", "ObjectExpression"];
 
 Blocklify.JavaScript.importer.convert = function(node, parent, level) {
@@ -97,6 +97,7 @@ Blocklify.JavaScript.importer.setOutput = function(block, bool) {
   mutation.setAttribute('output', bool + '');
 };
 Blocklify.JavaScript.importer.appendCloneMutation = function(block, name, elementName, elements, parent) {
+  var no_inline_blocks = Blocklify.JavaScript.importer.no_inline_atomic_blocks;
   var mutation = block.getElementsByTagName('mutation')[0]; // one mutation element per block
   if (mutation == undefined) {
     mutation = goog.dom.createDom('mutation');
@@ -108,6 +109,10 @@ Blocklify.JavaScript.importer.appendCloneMutation = function(block, name, elemen
     var elementBlock = Blocklify.JavaScript.importer.convert_atomic(elements[i], parent);
     Blocklify.JavaScript.importer.setOutput(elementBlock, true);
     Blocklify.JavaScript.importer.appendValueInput(block, elementName + i, elementBlock);
+    inlineFlag = inlineFlag || (no_inline_blocks.indexOf(elements[i].type) != -1);
+  }
+  if (inlineFlag) {
+    block.setAttribute('inline', 'false');
   }
 };
 
@@ -163,8 +168,7 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
         block.setAttribute('inline', 'false');
       }
       //force output
-      leftBlock.setAttribute('output', 'true');
-      rightBlock.setAttribute('output', 'true');
+      Blocklify.JavaScript.importer.setOutput(rightBlock, true);
       Blocklify.JavaScript.importer.appendValueInput(block, 'VAR', leftBlock);
       Blocklify.JavaScript.importer.appendField(block, 'OPERATOR', node.operator);
       Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', rightBlock);
@@ -182,8 +186,7 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
           block.setAttribute('inline', 'false');
         }
       }
-      varBlock.setAttribute('output', 'true');
-      initBlock.setAttribute('output', 'true');
+      Blocklify.JavaScript.importer.setOutput(initBlock, true);
       Blocklify.JavaScript.importer.appendValueInput(block, 'VAR', varBlock);
       Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', initBlock);
       break;
@@ -201,8 +204,7 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
             block.setAttribute('inline', 'false');
           }
         }
-        varBlock.setAttribute('output', 'true');
-        initBlock.setAttribute('output', 'true');
+        Blocklify.JavaScript.importer.setOutput(initBlock, true);
         Blocklify.JavaScript.importer.appendValueInput(block, 'VAR', varBlock);
         Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', initBlock);
       } else {
@@ -222,47 +224,23 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
       break;
     case "CallExpression":
       block = Blocklify.JavaScript.importer.createBlock('js_call_expression');
-      var nameBlock = Blocklify.JavaScript.importer.convert_atomic(node.callee, node, workspace);
-      var inlineFlag = false;
-      block.setArguments(node.arguments.length);
-      node.arguments.forEach(function (element, index){
-        var argBlock = Blocklify.JavaScript.Parser.render_atomic(element, node, workspace);
-        Blocklify.JavaScript.Parser.force_output(argBlock);
-        block.getInput('ARGUMENT' + index).connection.connect(argBlock.outputConnection);
-        inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
-      });
-      if (inlineFlag) {
-        block.setInputsInline(false);
-      }
-      block.getInput('NAME').connection.connect(nameBlock.outputConnection);
+      var nameBlock = Blocklify.JavaScript.importer.convert_atomic(node.callee, node);
+      Blocklify.JavaScript.importer.appendCloneMutation(block, 'arguments', 'ARGUMENT', node.arguments, node);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'NAME', nameBlock);
       break;
     case "FunctionExpression":
       if (node.id != null) {
-        block = Blockly.Block.obtain(workspace ,"js_function_expression");
-        var nameBlock = Blocklify.JavaScript.importer.convert_atomic(node.id, node, workspace);
+        block = Blocklify.JavaScript.importer.createBlock('js_function_expression');
+        var nameBlock = Blocklify.JavaScript.importer.convert_atomic(node.id, node);
       } else {
-        block = Blockly.Block.obtain(workspace ,"js_anonimous_function_expression");
+        block = Blocklify.JavaScript.importer.createBlock('js_anonimous_function_expression');
       }
-      var stackBlock = Blocklify.JavaScript.importer.convert_atomic(node.body, node, workspace);
-      var inlineFlag = false;
-      block.initSvg();
-      block.render();
-      block.setParams(node.params.length);
-      node.params.forEach(function (element, index){
-        var paramBlock = Blocklify.JavaScript.importer.convert_atomic(element, node);
-        Blocklify.JavaScript.Parser.force_output(paramBlock);
-        block.getInput('PARAM' + index).connection.connect(paramBlock.outputConnection);
-        inlineFlag = inlineFlag || (no_inline_blocks.indexOf(element.type) != -1);
-      });
-      if (inlineFlag) {
-        block.setInputsInline(false);
-      }
+      var stackBlock = Blocklify.JavaScript.importer.convert_atomic(node.body, node);
+      Blocklify.JavaScript.importer.appendCloneMutation(block, 'params', 'PARAM', node.params, node);
       if (node.id != null) {
-        block.getInput('NAME').connection.connect(nameBlock.outputConnection);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'NAME', nameBlock);
       }
-      if (stackBlock) {
-        block.getInput('STACK').connection.connect(stackBlock.previousConnection);
-      }
+      Blocklify.JavaScript.importer.appendValueInput(block, 'STACK', stackBlock);
       break;
     case "FunctionDeclaration":
       block = Blocklify.JavaScript.importer.createBlock('js_function_expression');
@@ -279,8 +257,8 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
     case 'Identifier':
       if(parent.type == 'MemberExpression' && parent.computed) {
         block = Blocklify.JavaScript.importer.createBlock('js_computed_member_expression');
-        var memberBlock = Blocklify.JavaScript.Parser.render_atomic(node, node, workspace);
-        block.getInput('MEMBER').connection.connect(memberBlock.outputConnection);
+        var memberBlock = Blocklify.JavaScript.importer.convert_atomic(node, node);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'MEMBER', memberBlock);
       } else if (node.name == 'undefined') {
         block = Blocklify.JavaScript.importer.createBlock('js_undefined_value');
       } else {
@@ -294,115 +272,103 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent) {
         count++;
         current_node = current_node.object;
       }
-      block = Blockly.Block.obtain(workspace ,"js_member_expression");
-      block.setMembers(count);
+      block = Blocklify.JavaScript.importer.createBlock('js_member_expression');
+      var mutation = goog.dom.createDom('mutation');
+      block.appendChild(mutation);
+      mutation.setAttribute('members', count + '');
       for (var i = count-1, current_node = node; i >= 0; i--) {
         //condition for final node
         member = (i == 0)?current_node:current_node.property;
-        memberBlock = Blocklify.JavaScript.Parser.render_atomic(member, parentM, workspace);
-        Blocklify.JavaScript.Parser.force_output(memberBlock);
-        block.getInput('MEMBER' + i).connection.connect(memberBlock.outputConnection);
+        memberBlock = Blocklify.JavaScript.importer.convert_atomic(member, parentM);
+        Blocklify.JavaScript.importer.setOutput(memberBlock, true);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'MEMBER' + i, memberBlock);
         current_node = current_node.object;
         parentM = current_node;
       };
-      block.initSvg();
-      block.render();
       break;
     case "ReturnStatement":
       block = Blocklify.JavaScript.importer.createBlock('js_return_statement');
-      var argBlock = Blocklify.JavaScript.Parser.render_atomic(node.argument, node, workspace);
-      Blocklify.JavaScript.Parser.force_output(argBlock);
-      block.initSvg();
-      block.getInput('VALUE').connection.connect(argBlock.outputConnection);
-      block.render();
+      var argBlock = Blocklify.JavaScript.importer.convert_atomic(node.argument, node);
+      Blocklify.JavaScript.importer.setOutput(argBlock, true);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', argBlock);
       break;
     case "UpdateExpression":
       if (node.prefix == true) {
-        block = Blockly.Block.obtain(workspace ,"js_update_expression_prefix");
+        block = Blocklify.JavaScript.importer.createBlock('js_update_expression_prefix');
       } else {
-        block = Blockly.Block.obtain(workspace ,"js_update_expression_noprefix");
+        block = Blocklify.JavaScript.importer.createBlock('js_update_expression_noprefix');
       }
-      var argBlock = Blocklify.JavaScript.Parser.render_atomic(node.argument, node, workspace);
-      block.setFieldValue(node.operator, 'OPERATOR');
-      block.initSvg();
-      block.getInput('ARGUMENT').connection.connect(argBlock.outputConnection);
-      block.render();
+      var argBlock = Blocklify.JavaScript.importer.convert_atomic(node.argument, node);
+      Blocklify.JavaScript.importer.appendField(block, 'OPERATOR', node.operator);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'ARGUMENT', argBlock);
       break;
     case "BinaryExpression":
-      block = Blockly.Block.obtain(workspace ,"js_binary_expression");
-      var leftBlock = Blocklify.JavaScript.Parser.render_atomic(node.left, node, workspace);
-      var rightBlock = Blocklify.JavaScript.Parser.render_atomic(node.right, node, workspace);
-      Blocklify.JavaScript.Parser.force_output(rightBlock);
-      Blocklify.JavaScript.Parser.force_output(leftBlock);
-      block.setFieldValue(node.operator, 'OPERATOR');
-      block.initSvg();
-      block.getInput('LEFT').connection.connect(leftBlock.outputConnection);
-      block.getInput('RIGHT').connection.connect(rightBlock.outputConnection);
-      block.render();
+      block = Blocklify.JavaScript.importer.createBlock('js_binary_expression');
+      var leftBlock = Blocklify.JavaScript.importer.convert_atomic(node.left, node);
+      var rightBlock = Blocklify.JavaScript.importer.convert_atomic(node.right, node);
+      Blocklify.JavaScript.importer.setOutput(rightBlock, true);
+      Blocklify.JavaScript.importer.setOutput(leftBlock, true);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'LEFT', leftBlock);
+      Blocklify.JavaScript.importer.appendField(block, 'OPERATOR', node.operator);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'RIGHT', rightBlock);
       break;
-      case "ObjectExpression":
-      var blocks = [];
-      node.properties.forEach(function (element, index) {
-        blocks[index] = Blockly.Block.obtain(workspace ,"js_json_element");
-        if (no_inline_blocks.indexOf(element.value.type) != -1) {
-            blocks[index].setInputsInline(false);
-          }
-        blocks[index].initSvg();
-        blocks[index].render();
-        var key = Blocklify.JavaScript.Parser.render_atomic(element.key, node, workspace);
-        var value = Blocklify.JavaScript.Parser.render_atomic(element.value, node, workspace);
-        Blocklify.JavaScript.Parser.force_output(key);
-        Blocklify.JavaScript.Parser.force_output(value);
-        blocks[index].getInput('KEY').connection.connect(key.outputConnection);
-        blocks[index].getInput('VALUE').connection.connect(value.outputConnection);
-        //connect the block to the previous block
-        if (index != 0) {
-          blocks[index].previousConnection.connect(blocks[index-1].nextConnection);
-        }
-      });
-      block = Blockly.Block.obtain(workspace ,"js_json_object");
-      block.initSvg();
-      if (blocks.length > 0) {
-        block.getInput('ELEMENTS').connection.connect(blocks[0].previousConnection);
+    case "ObjectExpression":
+      block = Blocklify.JavaScript.importer.createBlock('js_json_object');
+      if (node.properties.length == 0) {
+        return;
       }
-      block.render();
+      for (var i = 0; i < node.properties.length; i++) {
+        node.properties[i].type = 'ObjectElement';
+      };
+      var stackBlock = Blocklify.JavaScript.importer.appendStatement(null, node.properties, node);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'ELEMENTS', stackBlock);
+      break;
+    case 'ObjectElement':
+      block = Blocklify.JavaScript.importer.createBlock('js_json_element');
+      var key = Blocklify.JavaScript.importer.convert_atomic(node.key, node);
+      var value = Blocklify.JavaScript.importer.convert_atomic(node.value, node);
+      if (no_inline_blocks.indexOf(node.value.type) != -1) {
+        block.setAttribute('inline', 'false');
+      }
+      Blocklify.JavaScript.importer.setOutput(value, true);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'KEY', key);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', value);
       break;
     case "IfStatement":
-      block = Blockly.Block.obtain(workspace ,"js_if_statement");
+      block = Blocklify.JavaScript.importer.createBlock('js_if_statement');
       var tests = [], consequents = [], current_node = node.alternate, countElseIf = 0, countElse = 0;
-      tests.push(Blocklify.JavaScript.Parser.render_atomic(node.test, node, workspace));
-      consequents.push(Blocklify.JavaScript.Parser.render_atomic(node.consequent, node, workspace));
-      Blocklify.JavaScript.Parser.force_output(tests[0]);
+      tests.push(Blocklify.JavaScript.importer.convert_atomic(node.test, node));
+      consequents.push(Blocklify.JavaScript.importer.convert_atomic(node.consequent, node));
+      Blocklify.JavaScript.importer.setOutput(tests[0], true);
       while (current_node) {
         if (current_node.type == 'IfStatement') {
           countElseIf++;
-          tests.push(Blocklify.JavaScript.Parser.render_atomic(current_node.test, current_node, workspace));
-          Blocklify.JavaScript.Parser.force_output(tests[tests.length-1]);
-          consequents.push(Blocklify.JavaScript.Parser.render_atomic(current_node.consequent, current_node, workspace));
+          tests.push(Blocklify.JavaScript.importer.convert_atomic(current_node.test, current_node));
+          Blocklify.JavaScript.importer.setOutput(tests[tests.length-1], true);
+          consequents.push(Blocklify.JavaScript.importer.convert_atomic(current_node.consequent, current_node));
           current_node = current_node.alternate;
         } else {
           countElse = 1;
-          var alternate = Blocklify.JavaScript.Parser.render_atomic(current_node.alternate || current_node, node, workspace);
+          var alternate = Blocklify.JavaScript.importer.convert_atomic(current_node.alternate || current_node, node);
           current_node = null;
         }
       };
-      block.setCounts(countElseIf, countElse);
-      block.getInput('IF0').connection.connect(tests[0].outputConnection);
-      block.getInput('DO0').connection.connect(consequents[0].previousConnection);
+      var mutation = goog.dom.createDom('mutation');
+      block.appendChild(mutation);
+      mutation.setAttribute('elseif', countElseIf + '');
+      mutation.setAttribute('else', countElse + '');
+      Blocklify.JavaScript.importer.appendValueInput(block, 'IF0', tests[0]);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'DO0', consequents[0]);
       for (var i = 1; i <= countElseIf; i++) {
-        block.getInput('IF' + i).connection.connect(tests[i].outputConnection);
-        block.getInput('DO' + i).connection.connect(consequents[i].previousConnection);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'IF' + i, tests[i]);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'DO' + i, consequents[i]);
       }
       if (countElse == 1) {
-        block.getInput('ELSE').connection.connect(alternate.previousConnection);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'ELSE', alternate);
       }
-      block.initSvg();
-      block.render();
       break;
     case "ThisExpression":
-      block = Blockly.Block.obtain(workspace ,"js_this_expression");
-      block.initSvg();
-      block.render();
+      block = Blocklify.JavaScript.importer.createBlock('js_this_expression');
       break;
     case "ArrayExpression":
       block = Blocklify.JavaScript.importer.createBlock('js_array_expression');

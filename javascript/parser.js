@@ -20,9 +20,6 @@
  */
 'use strict';
 
-// TODOs:
-//  - Support for: UnaryExpression, NewExpression, LogicalExpression, ThrowStatement
-
 goog.provide('Blocklify.JavaScript.Parser');
 
 /**
