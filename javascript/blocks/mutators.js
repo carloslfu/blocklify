@@ -173,7 +173,7 @@ Blocklify.JavaScript.Blocks.mutators['switch'] = function (block, options){
     if (blockDomToMutation) {
       blockDomToMutation.call(this, xmlElement);
     }
-    this.setOutput_(xmlElement.getAttribute('output') !== 'false');
+    this.setOutput_(xmlElement.getAttribute('output') == 'true');
   };
 
   block.setOutput_ = function(hasOutput) {

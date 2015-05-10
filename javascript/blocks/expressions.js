@@ -293,6 +293,7 @@ Blockly.Blocks['js_update_expression_prefix'] = {
         ['ARGUMENT', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Update expression with prefix.');
+    Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
 Blockly.Blocks['js_update_expression_noprefix'] = {
@@ -310,6 +311,7 @@ Blockly.Blocks['js_update_expression_noprefix'] = {
         ['OPERATOR', new Blockly.FieldTextInput('++')],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Update expression without prefix.');
+    Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
 Blockly.Blocks['js_binary_expression'] = {
