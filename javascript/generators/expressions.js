@@ -53,7 +53,14 @@ Blocklify.JavaScript.Generator['js_binary_expression'] = function(block) {
     '-': Blocklify.JavaScript.Generator.ORDER_SUBTRACTION,
     '*': Blocklify.JavaScript.Generator.ORDER_MULTIPLICATION,
     '/': Blocklify.JavaScript.Generator.ORDER_DIVISION,
-    '%': Blocklify.JavaScript.Generator.ORDER_MODULUS
+    '==': Blocklify.JavaScript.Generator.ORDER_EQUALITY,
+    '!=': Blocklify.JavaScript.Generator.ORDER_EQUALITY,
+    '===': Blocklify.JavaScript.Generator.ORDER_EQUALITY,
+    '!==': Blocklify.JavaScript.Generator.ORDER_EQUALITY,
+    '>': Blocklify.JavaScript.Generator.ORDER_RELATIONAL,
+    '<': Blocklify.JavaScript.Generator.ORDER_RELATIONAL,
+    '>=': Blocklify.JavaScript.Generator.ORDER_RELATIONAL,
+    '<=': Blocklify.JavaScript.Generator.ORDER_RELATIONAL
   };
   var operator = block.getFieldValue('OPERATOR');
   var left = Blocklify.JavaScript.Generator.valueToCode(block, 'LEFT',
