@@ -47,7 +47,8 @@ Blocklify.JavaScript.importer.convert = function(node, parent, level) {
 Blocklify.JavaScript.importer.notimplementedblockmsg = function(node) {
   var block = goog.dom.createDom('block');
   block.setAttribute('type', 'js_notimplemented');
-  console.log("not yet implemented node:");
+  Blocklify.JavaScript.importer.appendField(block, 'TYPE', node.type);
+  console.log("importer not yet implemented node:");
   console.log(node);
   return block;
 };

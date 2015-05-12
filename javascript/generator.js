@@ -25,6 +25,8 @@
 
 goog.provide('Blocklify.JavaScript.Generator');
 
+// TODO: improve code generation, for atomic generation. This implies rewrite all blockly/core/generator.js class.
+//       Now blocklify use the blockly code generation API, but improve this API making his own is nesesary.
 
 /**
  * JavaScript code generator for Blocklify.
@@ -150,4 +152,28 @@ Blocklify.JavaScript.Generator.scrub_ = function(block, code) {
   var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   var nextCode = Blocklify.JavaScript.Generator.blockToCode(nextBlock);
   return commentCode + code + nextCode;
+};
+
+/**
+ * Generate code representing the sequence.  Indent the code.
+ * @param {!Blockly.Block} block The block containing the input.
+ * @param {string} name The name of the input.
+ * @return {string} Generated code or '' if no blocks are connected.
+ */
+Blocklify.JavaScript.Generator.sequenceToCode = function(block, name) {
+  var targetBlock = block.getInputTargetBlock(name);
+  if (targetBlock == null) {
+    return '';
+  }
+  var nextBlock = targetBlock;
+  var code = '', blockCode, func = null, i = 0;
+  do {
+    func = this[nextBlock.type];
+    blockCode = ((i !=0 )?' ,':'') + func.call(nextBlock, nextBlock);
+    blockCode = blockCode.substring(0, blockCode.length - 2);
+    code += blockCode;
+    nextBlock = nextBlock.getNextBlock();
+    i++;
+  } while (nextBlock != null);
+  return code;
 };

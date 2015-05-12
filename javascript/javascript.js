@@ -28,29 +28,60 @@ goog.provide('Blocklify.JavaScript');
 Blocklify.JavaScript.astParser = acorn;
 
 Blocklify.JavaScript.toolbox =
-  '<xml id="toolbox" style="display: none">' +
+  '<xml id="toolbox" style="display: none">' + // COMBINED BLOCKS
     '<category name="Variables">' +
-  	 '<block type="js_variable_declaration_unary">' +
+      '<block type="js_variable_declaration_unary">' +
         '<value name="VAR">' +
           '<block type="js_identifier">' +
-            '<field name="NAME"></field>' +
+            '<field name="NAME">i</field>' +
           '</block>' +
         '</value>' +
         '<value name="VALUE">' +
           '<block type="js_literal_number">' +
-            '<field name="NUMBER"></field>' +
+            '<field name="NUMBER">0</field>' +
+          '</block>' +
+        '</value>' +
+      '</block>' +
+      '<block type="js_variable_declaration">' +
+        '<value name="DECLARATIONS">' +
+          '<block type="js_variable_declarator">' +
+            '<value name="VAR">' +
+              '<block type="js_identifier">' +
+                '<field name="NAME">i</field>' +
+              '</block>' +
+            '</value>' +
+            '<value name="VALUE">' +
+              '<block type="js_literal_number">' +
+                '<field name="NUMBER">0</field>' +
+              '</block>' +
+            '</value>' +
           '</block>' +
         '</value>' +
       '</block>' +
     '</category>' +
-  	'<sep>pure</sep>' +
+    '<category name="Expressions">' +
+      '<block type="js_assignment_expression">' +
+        '<value name="VAR">' +
+          '<block type="js_identifier">' +
+            '<field name="NAME">i</field>' +
+          '</block>' +
+        '</value>' +
+        '<value name="VALUE">' +
+          '<block type="js_literal_number">' +
+            '<field name="NUMBER">0</field>' +
+          '</block>' +
+        '</value>' +
+      '</block>' +
+    '</category>' +
+  	'<sep></sep>' + // PURE JS
     '<category name="Data">' +
+      '<block type="js_identifier"></block>' +
       '<block type="js_literal_number"></block>' +
       '<block type="js_literal_string"></block>' +
+      '<block type="js_literal_bool"></block>' +
       '<block type="js_null_value"></block>' +
       '<block type="js_json_object"></block>' +
       '<block type="js_json_element"></block>' +
-      '<block type="js_identifier"></block>' +
       '<block type="js_computed_member_expression"></block>' +
     '</category>' +
     '<category name="Variables">' +
@@ -59,21 +90,22 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_variable_declaration"></block>' +
     '</category>' +
     '<category name="Expressions">' +
-      '<block type="js_if_statement"></block>' +
       '<block type="js_assignment_expression"></block>' +
+      '<block type="js_binary_expression"></block>' +
+      '<block type="js_array_expression"></block>' +
+      '<block type="js_member_expression"></block>' +
       '<block type="js_update_expression_prefix"></block>' +
       '<block type="js_update_expression_noprefix"></block>' +
-      '<block type="js_binary_expression"></block>' +
-      '<block type="js_member_expression"></block>' +
-      '<block type="js_array_expression"></block>' +
+    '</category>' +
+    '<category name="Statements">' +
+      '<block type="js_if_statement"></block>' +
+      '<block type="js_for_statement"></block>' +
+      '<block type="js_return_statement"></block>' +
     '</category>' +
     '<category name="Functions">' +
       '<block type="js_function_expression"></block>' +
       '<block type="js_anonimous_function_expression"></block>' +
       '<block type="js_call_expression"></block>' +
-    '</category>' +
-    '<category name="Statements">' +
-      '<block type="js_return_statement"></block>' +
     '</category>' +
     /*'<category name="Custom">' +
       '<block type="js_blocklify"></block>' +
