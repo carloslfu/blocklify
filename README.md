@@ -1,4 +1,4 @@
-# Blocklify
+# Blocklify (alpha)
 
 Is an extension of [Blockly][blockly] for show code in blocks and generate the same code(ideally). The main idea is make a embeddable block editor for the most common text editors like sublime, brackets or any text scripting tool. The way for do that is make blocks for each language that represent the language, this helps to show code in blocks and generate code from blocks.
 
@@ -23,11 +23,13 @@ A [live demo][livedemo].
 - Two way parsing code, import and export code.
 
 Supported languages:
-- JavaScript. (partially - in develop)
+- JavaScript. (partially - work in progress)
 
 ## Getting started
 
-Just add blocklify_compressed.js file to your code (See the demo in demos folder), you need include blockly before blocklify.
+Just add blocklify_compressed.js file to your code (See the demo in demos folder), you need include blockly before blocklify sources.
+
+This proyect is under alpha development, don't use for production, is a work in progress.
 
 ## Develop
 

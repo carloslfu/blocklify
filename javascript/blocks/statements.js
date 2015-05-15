@@ -42,6 +42,7 @@ Blockly.Blocks['js_notimplemented'] = {
       .appendField(new Blockly.FieldTextInput(''), 'TYPE')
       .appendField('not yet implemented :(');
     this.setTooltip('Function returns the value of input.');
+    Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
 

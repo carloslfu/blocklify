@@ -50,11 +50,11 @@ var delete_all_blocks = function() {
 var parse_code = function () {
 	delete_all_blocks();
 	var javascript_code = document.getElementById('code').value;
-	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'pattern');
+	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'mixed'); // TODO: Add a select to the page for all options (atomic, pattern and mixed).
 	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
 };
 
 var parse_blocks = function () {
 	var output = document.getElementById('code');
-  	output.value = Blocklify.JavaScript.Generator.workspaceToCode(mainWorkspace);
+  	output.value = Blockly.JavaScript.workspaceToCode(mainWorkspace);
 };

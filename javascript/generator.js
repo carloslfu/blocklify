@@ -188,7 +188,7 @@ Blocklify.JavaScript.Generator.extrernalSources = [];
  *     For value blocks, an array containing the generated code and an
  *     operator order value.  Returns '' if block is null.
  */
-Blockly.Generator.prototype.blockToCode = function(block) {
+Blocklify.JavaScript.Generator.blockToCode = function(block) {
   if (!block) {
     return '';
   }

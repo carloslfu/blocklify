@@ -1,4 +1,4 @@
-//custom blocks - no native javascript
+//custom blocks - not yet implemented. experimenting with this, but this requires Blockly.FieldTextArea element (not available in blockly core).
 
 'use strict'
 
