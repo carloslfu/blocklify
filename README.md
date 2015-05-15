@@ -27,7 +27,7 @@ Supported languages:
 
 ## Getting started
 
-Just add blocklify_compressed.js file to your code (See the demo in demos folder).
+Just add blocklify_compressed.js file to your code (See the demo in demos folder), you need include blockly before blocklify.
 
 ## Develop
 

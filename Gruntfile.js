@@ -7,8 +7,6 @@ module.exports = function (grunt) {
         concat: {
             dist: {
                 src: [
-                    'blockly/blockly_compressed.js',
-                    'blockly/en.js',
                     'javascript/parser/acorn.js',
                     'blocklify.js',
                     'javascript/javascript.js',

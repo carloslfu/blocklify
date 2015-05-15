@@ -23,12 +23,22 @@
 var mainWorkspace;
 
 var onload = function() {
-  var toolbox_div = document.createElement('div');
-  //Loads toolbox for JavaScript
-  toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
-  document.body.appendChild(toolbox_div);
+  Blocklify.JavaScript.Generator.extrernalSources.push(Blockly.JavaScript); // external generators
+  var toolbox = document.getElementById('blockly_toolbox');
+  //Loads JavaScript toolbox
+  var javascript_toolbox = Blockly.Xml.textToDom(Blocklify.JavaScript.toolbox);
+  //Merge into blockly toolbox
+  toolbox.innerHTML += '<sep></sep>';
+  toolbox.innerHTML += '<sep></sep>';
+  toolbox.innerHTML += '<category name="JavaScript"></category>';
+  toolbox.innerHTML += '<sep></sep>';
+  var num_els = javascript_toolbox.children.length;
+  for (var i = 0; i < num_els; i++) {
+    toolbox.appendChild(javascript_toolbox.children[0]);
+  }
+  //toolbox.innerHTML += javascript_toolbox; // TODO: report bug, innerHTML with sep element doesn't work properly
   mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
-          {toolbox: document.getElementById('toolbox'), media: "../../blockly/media/"});
+          {toolbox: toolbox, media: "../../blockly/media/"});
 };
 
 var delete_all_blocks = function() {
@@ -40,7 +50,7 @@ var delete_all_blocks = function() {
 var parse_code = function () {
 	delete_all_blocks();
 	var javascript_code = document.getElementById('code').value;
-	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'atomic');
+	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'pattern');
 	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
 };
 

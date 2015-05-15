@@ -28,7 +28,7 @@ goog.provide('Blocklify.JavaScript');
 Blocklify.JavaScript.astParser = acorn;
 
 Blocklify.JavaScript.toolbox =
-  '<xml id="toolbox" style="display: none">' + // COMBINED BLOCKS
+  '<xml id="javascript_toolbox" style="display: none">' + // COMBINED BLOCKS
     '<category name="Variables">' +
       '<block type="js_variable_declaration_unary">' +
         '<value name="VAR">' +

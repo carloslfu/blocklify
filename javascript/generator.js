@@ -177,3 +177,58 @@ Blocklify.JavaScript.Generator.sequenceToCode = function(block, name) {
   } while (nextBlock != null);
   return code;
 };
+
+/* external generators*/
+Blocklify.JavaScript.Generator.extrernalSources = [];
+
+/**
+ * Generate code for the specified block (and attached blocks), allows external generators.
+ * @param {Blockly.Block} block The block to generate code for.
+ * @return {string|!Array} For statement blocks, the generated code.
+ *     For value blocks, an array containing the generated code and an
+ *     operator order value.  Returns '' if block is null.
+ */
+Blockly.Generator.prototype.blockToCode = function(block) {
+  if (!block) {
+    return '';
+  }
+  if (block.disabled) {
+    // Skip past this block if it is disabled.
+    return this.blockToCode(block.getNextBlock());
+  }
+
+  var func = this[block.type];
+  if (!func) {
+    // Search in external generators
+    for (var i = 0; i < Blocklify.JavaScript.Generator.extrernalSources.length; i++) {
+      func = Blocklify.JavaScript.Generator.extrernalSources[i][block.type];
+      if (func) {
+        break;
+      }
+    }
+    if (!func) {
+      throw 'Language "' + this.name_ + '" does not know how to generate code ' +
+          'for block type "' + block.type + '".';
+    }
+  }
+  // First argument to func.call is the value of 'this' in the generator.
+  // Prior to 24 September 2013 'this' was the only way to access the block.
+  // The current prefered method of accessing the block is through the second
+  // argument to func.call, which becomes the first parameter to the generator.
+  var code = func.call(block, block);
+  if (goog.isArray(code)) {
+    // Value blocks return tuples of code and operator order.
+    return [this.scrub_(block, code[0]), code[1]];
+  } else if (goog.isString(code)) {
+    if (this.STATEMENT_PREFIX) {
+      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + block.id + '\'') +
+          code;
+    }
+    return this.scrub_(block, code);
+  } else if (code === null) {
+    // Block has handled code generation itself.
+    return '';
+  } else {
+    throw 'Invalid code generated: ' + code;
+  }
+};

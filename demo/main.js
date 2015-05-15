@@ -29,7 +29,7 @@ var onload = function () {
 	toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
 	document.body.appendChild(toolbox_div);
 	mainWorkspace = Blockly.inject(blockly_div,
-	        {toolbox: document.getElementById('toolbox'), media: "../blockly/media/"});
+	        {toolbox: document.getElementById('javascript_toolbox'), media: "../blockly/media/"});
 	setTimeout(function (){
 		//expect for rendering
 		blockly_div.style.display = "none";

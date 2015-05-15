@@ -28,7 +28,7 @@ var onload = function() {
   toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
   document.body.appendChild(toolbox_div);
   mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
-          {toolbox: document.getElementById('toolbox'), media: "../../blockly/media/"});
+          {toolbox: document.getElementById('javascript_toolbox'), media: "../../blockly/media/"});
 }
 
 var delete_all_blocks = function() {
