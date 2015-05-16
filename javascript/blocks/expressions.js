@@ -54,13 +54,27 @@ Blockly.Blocks['js_assignment_expression'] = {
    * @this Blockly.Block
    */
   init: function() {
+    var OPERATORS = [
+      ['=', '='],
+      ['+=', '+='],
+      ['-=', '-='],
+      ['*=', '*='],
+      ['/=', '/='],
+      ['%=', '%='],
+      ['&=', '&='],
+      ['^=', '^='],
+      ['|=', '|='],
+      ['>>=', '>>='],
+      ['<<=', '<<='],
+      ['>>>=', '>>>=']
+    ];
     this.setColour(330);
     this.setPreviousStatement(true, 'Statement');
     this.setNextStatement(true, 'Statement');
     this.interpolateMsg(
         'set %1 %2 %3',
         ['VAR', null],
-        ['OPERATOR', new Blockly.FieldTextInput('=')],
+        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
         ['VALUE', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Assignment expression.');
@@ -72,12 +86,16 @@ Blockly.Blocks['js_update_expression_prefix'] = {
    * @this Blockly.Block
    */
   init: function() {
+    var OPERATORS = [
+      ['++', '++'],
+      ['--', '--']
+    ];
     this.setColour(230);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.interpolateMsg(
         '%1 %2',
-        ['OPERATOR', new Blockly.FieldTextInput('++')],
+        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
         ['ARGUMENT', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Update expression with prefix.');
@@ -90,30 +108,58 @@ Blockly.Blocks['js_update_expression_noprefix'] = {
    * @this Blockly.Block
    */
   init: function() {
+    var OPERATORS = [
+      ['++', '++'],
+      ['--', '--']
+    ];
     this.setColour(230);
     this.setPreviousStatement(true, 'Statement');
     this.setNextStatement(true, 'Statement');
     this.interpolateMsg(
         '%1 %2',
         ['ARGUMENT', null],
-        ['OPERATOR', new Blockly.FieldTextInput('++')],
+        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Update expression without prefix.');
     Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
+
+// TODO: sepearate this block in tree blocks: js_binary_expression_logical, js_binary_expression_aritmetic and
+//       js_binary_expression_bitwise beacause the dropdown is so large
 Blockly.Blocks['js_binary_expression'] = {
   /**
    * Block for redering a binary expression.
    * @this Blockly.Block
    */
   init: function() {
+    var OPERATORS = [
+      ['+', '+'],
+      ['-', '-'],
+      ['*', '*'],
+      ['/', '/'],
+      ['%', '%'],
+      ['==', '=='],
+      ['!=', '!='],
+      ['>', '>'],
+      ['<', '<'],
+      ['>=', '>='],
+      ['<=', '<='],
+      ['===', '==='],
+      ['!==', '!=='],
+      ['&', '&'],
+      ['^', '^'],
+      ['|', '|'],
+      ['>>', '>>'],
+      ['<<', '<<'],
+      ['>>>', '>>>']
+    ];
     this.setColour(230);
     this.setOutput(true);
     this.interpolateMsg(
         '%1 %2 %3',
         ['LEFT', null],
-        ['OPERATOR', new Blockly.FieldTextInput('+')],
+        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
         ['RIGHT', null, Blockly.ALIGN_RIGHT],
         Blockly.ALIGN_RIGHT);
     this.setTooltip('Binary expression.');

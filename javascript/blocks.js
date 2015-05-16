@@ -25,8 +25,6 @@
  */
 goog.provide('Blocklify.JavaScript.Blocks');
 
-goog.require('Blocklify.JavaScript.Blocks.mutators');
-
 
 Blocklify.JavaScript.Blocks.setMutators = function(block, mutatorsList) {
   for (var i = 0; i < mutatorsList.length; i++) {

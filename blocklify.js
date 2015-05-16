@@ -22,9 +22,6 @@
 
 goog.provide('Blocklify');
 
-// Blockly core dependencies.
-goog.require('Blocklify.JavaScript');
-
 /**
  * Class for a code generator that translates the blocks into a language.
  * @param {string} name Language name of this parser.
