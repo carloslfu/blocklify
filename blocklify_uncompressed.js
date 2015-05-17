@@ -2538,7 +2538,7 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       break;
     
     default:  // if not implemented block
-      block = Blocklify.JavaScript.importer.notImplementedAtomicBlock(node);
+      block = Blocklify.JavaScript.importer.notImplementedBlock(node);
   }
   return block;
 };
