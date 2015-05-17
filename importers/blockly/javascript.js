@@ -1,7 +1,7 @@
 // Example of importer for blockly core blocks. Importer API experiment - work in progress, importer will be a class.
 
 // first import js block generators into blockly js generator context
-for (el in Blocklify.JavaScript.Generator) {
+for (var el in Blocklify.JavaScript.Generator) {
   if (el.substring(0,3) == 'js_') {
     Blockly.JavaScript[el] = Blocklify.JavaScript.Generator[el];
   }
