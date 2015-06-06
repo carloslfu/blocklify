@@ -1,5 +1,69 @@
 // Example of importer for blockly core blocks. Importer API experiment - work in progress, importer will be a class.
 
+// List of blockly blocks, info about this importer implementation and the case in which implements.
+/*
+  * Logic
+    - controls_if               // IMPLEMENTED -> "IfStatement"
+    - logic_compare
+    - logic_operation
+    - logic_negate
+    - logic_boolean             // IMPLEMENTED -> "Literal"
+    - logic_null                // IMPLEMENTED -> "Literal"
+    - logic_ternary
+  * Loops
+    - controls_repeat_ext
+    - controls_whileUntil       // IMPLEMENTED -> "WhileStatement"
+    - controls_for
+    - controls_forEach
+    - controls_flow_statements
+  * Math
+    - math_number               // IMPLEMENTED -> "Literal"
+    - math_arithmetic
+    - math_single
+    - math_trig
+    - math_constant
+    - math_number_property
+    - math_change
+    - math_round
+    - math_on_list
+    - math_modulo
+    - math_constrain
+    - math_random_int
+    - math_random_float
+  * Text
+    - text                      // IMPLEMENTED -> "Literal"
+    - text_join
+    - text_append
+    - text_length
+    - text_isEmpty
+    - text_indexOf
+    - text_charAt
+    - text_getSubstring
+    - text_changeCase
+    - text_trim
+    - text_print
+    - text_prompt_ext
+  * Lists
+    - lists_create_empty
+    - lists_create_with        // IMPLEMENTED -> "ArrayExpression"
+    - lists_repeat
+    - lists_length
+    - lists_isEmpty
+    - lists_indexOf
+    - lists_getIndex
+    - lists_setIndex
+    - lists_getSublist
+    - lists_split
+  * Colour
+    - colour_picker
+    - colour_random
+    - colour_rgb
+    - colour_blend
+  * Variables
+  * Functions
+*/
+
+
 // first import js block generators into blockly js generator context
 for (var el in Blocklify.JavaScript.Generator) {
   if (el.substring(0,3) == 'js_') {
@@ -73,6 +137,25 @@ Blockly.JavaScript.importer = function(node, parent, options) {
       if (countElse == 1) {
         Blocklify.JavaScript.importer.appendValueInput(block, 'ELSE', alternate);
       }
+      break;
+    case "ArrayExpression":
+      block = Blocklify.JavaScript.importer.createBlock('lists_create_with');
+      Blocklify.JavaScript.importer.appendCloneMutation(block, 'items', 'ADD', node.elements, node, options);
+      break;
+    case "WhileStatement":
+      block = Blocklify.JavaScript.importer.createBlock('controls_whileUntil');
+      if (node.test.type == 'UnaryExpression' && node.test.operator == '!') {
+        mode = 'UNTIL';
+        procesedTest = node.test.argument;
+      } else {
+        mode = 'WHILE';
+        procesedTest = node.test;
+      }
+      Blocklify.JavaScript.importer.appendField(block, 'MODE', mode);
+      var test = Blocklify.JavaScript.importer.convert_atomic(procesedTest, node, options);
+      var body = Blocklify.JavaScript.importer.convert_atomic(node.body, node, options);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'BOOL', test);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
       break;
     default:  // if not implemented block
       break;
