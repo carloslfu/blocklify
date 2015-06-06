@@ -1,6 +1,7 @@
 # Blocklify (alpha)
 
 Is an extension of [Blockly][blockly] for show code in blocks and generate the same code(ideally). The main idea is make a embeddable block editor for the most common text editors like sublime, brackets or any text scripting tool. The way for do that is make blocks for each language that represent the language, this helps to show code in blocks and generate code from blocks.
+
 Now you can use pattern matching for import code to custom blocks, for example import javascript code to Blockly core blocks and additionaly you can use the mixed importer for fill the unsupported features of your custom blocks (or Blockly core blocks) with the JavaScript blocks, see the `tests/patterns/` folder and the `importers/` folder.
 
 See the [BB editor][bb-editor-git] research project page.
