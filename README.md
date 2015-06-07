@@ -62,7 +62,8 @@ Feel free to contribute. This is the workflow to make a contribution:
 
 For make support for other languages, make a AST parser like [acorn][acorn], and make a renderer for blockly, see the project structure.
 [acorn]: http://marijnhaverbeke.nl/acorn/
-Pull your hacks :)
+Pull your hacks :) , see the [hacking page][hacking-page].
+[hacking-page]: https://github.com/carloslfu/blocklify/blob/master/HACKING.md
 
 If you wants to do any feature or have found any bug related to the rendering of blocks, you can contribute to [Blockly repo][blockly-git] reporting the bug or pulling your patch.
 
