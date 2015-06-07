@@ -18,7 +18,7 @@
     - controls_flow_statements
   * Math
     - math_number               // IMPLEMENTED -> "Literal"
-    - math_arithmetic
+    - math_arithmetic           // IMPLEMENTED -> "BinaryExpression"
     - math_single
     - math_trig
     - math_constant
@@ -74,7 +74,7 @@ for (var el in Blocklify.JavaScript.Generator) {
 // now the block importer
 Blockly.JavaScript.importer = function(node, parent, options) {
   // this is the importer for blockly block (pattern converter)
-  //the return block
+  //the returned block
   var block = null, field;
   //none-estetic inline blocks
   var no_inline_blocks = [];
@@ -157,6 +157,17 @@ Blockly.JavaScript.importer = function(node, parent, options) {
       Blocklify.JavaScript.importer.appendValueInput(block, 'BOOL', test);
       Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
       break;
+    case "BinaryExpression":
+      if (['+', '-', '*', '/'].indexOf(node.operator) != -1) {
+        var operators = {'+': 'ADD', '-': 'MINUS', '*': 'MULTIPLY', '/': 'DIVIDE'};
+        block = Blocklify.JavaScript.importer.createBlock('math_arithmetic');
+        Blocklify.JavaScript.importer.appendField(block, 'OP', operators[node.operator]);
+        var A = Blocklify.JavaScript.importer.convert_atomic(node.left, node, options);
+        var B = Blocklify.JavaScript.importer.convert_atomic(node.right, node, options);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'A', A);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'B', B);
+        break;
+      }
     default:  // if not implemented block
       break;
   }
