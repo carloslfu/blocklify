@@ -8,10 +8,10 @@ See the [BB editor][bb-editor-git] research project page.
 
 [bb-editor-git]: https://github.com/carloslfu/BB-editor
 
-A [live demo][livedemo].
+A [live demo of native laanguage blocks][livedemo].
 [livedemo]: https://carloslfu.github.io/blocklify/demo/
 
-A [live demo of pattern matching][paternmatching].
+A [live demo of pattern matching (custom blocks importers)][paternmatching].
 [paternmatching]: https://carloslfu.github.io/blocklify/tests/patterns/
 
 ![example](https://github.com/carloslfu/blocklify/blob/master/blocklify.jpg)
