@@ -225,9 +225,9 @@ Blockly.JavaScript.importer = function(node, parent, options) {
                 && (node.init.left.type == 'Identifier') && (node.init.right.type == 'Literal');
         // -- update conditions
         var byValue;
-        flag = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
+        var flag1 = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
                       && node.update.argument.type == 'Identifier' && node.test.left.name == node.update.argument.name);
-        if (flag) {
+        if (flag1) {
           byValue = '1';
         }
         var flag2 = (node.update.type == 'AssignmentExpression' && node.update.operator == '+='
@@ -236,7 +236,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         if (flag2) {
           byValue = node.update.right.raw;
         }
-        flag = flag || flag2;
+        flag = flag && (flag1 || flag2);
         if (flag) {  // controls_for
           blockType = 'controls_for';
         }
