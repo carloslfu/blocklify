@@ -4,12 +4,12 @@
 /*
   * Logic
     - controls_if               // IMPLEMENTED -> "IfStatement"
-    - logic_compare
-    - logic_operation
-    - logic_negate
+    - logic_compare             // IMPLEMENTED -> "BinaryExpression"
+    - logic_operation           // IMPLEMENTED -> "LogicalExpression"
+    - logic_negate              // IMPLEMENTED -> "UnaryExpression"
     - logic_boolean             // IMPLEMENTED -> "Literal"
     - logic_null                // IMPLEMENTED -> "Literal"
-    - logic_ternary
+    - logic_ternary             // IMPLEMENTED -> "ConditionalExpression"
   * Loops
     - controls_repeat_ext
     - controls_whileUntil       // IMPLEMENTED -> "WhileStatement"
@@ -86,7 +86,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
     case "BlockStatement":
       block = Blocklify.JavaScript.importer.appendStatement(null, node.body, node, options);
       break;
-    case "Literal":
+    case "Literal":    // logic_null, math_number, text, logic_boolean
       block = goog.dom.createDom('block');
       if (node.value == null) {
         block.setAttribute('type' ,'logic_null');
@@ -104,7 +104,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         }
       }
       break;
-    case "IfStatement":
+    case "IfStatement":    // controls_if
       block = Blocklify.JavaScript.importer.createBlock('controls_if');
       var tests = [], consequents = [], current_node = node.alternate, countElseIf = 0, countElse = 0;
       tests.push(Blocklify.JavaScript.importer.convert_atomic(node.test, node, options));
@@ -142,7 +142,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
       block = Blocklify.JavaScript.importer.createBlock('lists_create_with');
       Blocklify.JavaScript.importer.appendCloneMutation(block, 'items', 'ADD', node.elements, node, options);
       break;
-    case "WhileStatement":
+    case "WhileStatement":    // controls_whileUntil
       block = Blocklify.JavaScript.importer.createBlock('controls_whileUntil');
       if (node.test.type == 'UnaryExpression' && node.test.operator == '!') {
         mode = 'UNTIL';
@@ -157,17 +157,48 @@ Blockly.JavaScript.importer = function(node, parent, options) {
       Blocklify.JavaScript.importer.appendValueInput(block, 'BOOL', test);
       Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
       break;
-    case "BinaryExpression":
-      if (['+', '-', '*', '/'].indexOf(node.operator) != -1) {
-        var operators = {'+': 'ADD', '-': 'MINUS', '*': 'MULTIPLY', '/': 'DIVIDE'};
-        block = Blocklify.JavaScript.importer.createBlock('math_arithmetic');
-        Blocklify.JavaScript.importer.appendField(block, 'OP', operators[node.operator]);
+    case "BinaryExpression": case "LogicalExpression":
+      // math_arithmetic, logic_compare, logic_operation
+      if (['+', '-', '*', '/', '==', '!=',
+             '<', '>', '<=', '>=', '&&', '||'].indexOf(node.operator) != -1) { // Blockly-JavaScript acepted operators
+
         var A = Blocklify.JavaScript.importer.convert_atomic(node.left, node, options);
         var B = Blocklify.JavaScript.importer.convert_atomic(node.right, node, options);
+
+        if (['+', '-', '*', '/'].indexOf(node.operator) != -1) { // math_arithmetic
+          var operators = {'+': 'ADD', '-': 'MINUS', '*': 'MULTIPLY', '/': 'DIVIDE'};
+          block = Blocklify.JavaScript.importer.createBlock('math_arithmetic');
+        } else if (['==', '!=', '<', '>', '<=', '>='].indexOf(node.operator) != -1) { // logic_compare
+          var operators = {'==': 'EQ', '!=': 'NEQ',
+                           '<': 'LT', '>': 'GT',
+                           '<=': 'LTE', '>=': 'GTE'};
+          block = Blocklify.JavaScript.importer.createBlock('logic_compare');
+        } else if (['&&', '||'].indexOf(node.operator) != -1) { // logic_operation
+          var operators = {'&&': 'AND', '||': 'OR'};
+          block = Blocklify.JavaScript.importer.createBlock('logic_operation');
+        }
+        Blocklify.JavaScript.importer.appendField(block, 'OP', operators[node.operator]);
         Blocklify.JavaScript.importer.appendValueInput(block, 'A', A);
         Blocklify.JavaScript.importer.appendValueInput(block, 'B', B);
         break;
       }
+    case "UnaryExpression":    // logic_negate
+      if (node.operator == '!') {
+        block = Blocklify.JavaScript.importer.createBlock('logic_negate');
+        var argument = Blocklify.JavaScript.importer.convert_atomic(node.argument, node, options);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'BOOL', argument);
+        break;
+      }
+    case "ConditionalExpression":    // logic_ternary
+      block = Blocklify.JavaScript.importer.createBlock('logic_ternary');
+      var test = Blocklify.JavaScript.importer.convert_atomic(node.test, node, options);
+      var consequent = Blocklify.JavaScript.importer.convert_atomic(node.consequent, node, options);
+      var alternate = Blocklify.JavaScript.importer.convert_atomic(node.alternate, node, options);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'IF', test);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'THEN', consequent);
+      Blocklify.JavaScript.importer.appendValueInput(block, 'ELSE', alternate);
+      break;
+      
     default:  // if not implemented block
       break;
   }
