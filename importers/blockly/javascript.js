@@ -11,9 +11,9 @@
     - logic_null                // IMPLEMENTED -> "Literal"
     - logic_ternary             // IMPLEMENTED -> "ConditionalExpression"
   * Loops
-    - controls_repeat_ext
+    - controls_repeat_ext       // IMPLEMENTED -> "ForStatement" -> var handling: if initializer name starts with 'count' this block is rendered
     - controls_whileUntil       // IMPLEMENTED -> "WhileStatement"
-    - controls_for
+    - controls_for              // IMPLEMENTED -> "ForStatement"
     - controls_forEach
     - controls_flow_statements
   * Math
@@ -198,6 +198,70 @@ Blockly.JavaScript.importer = function(node, parent, options) {
       Blocklify.JavaScript.importer.appendValueInput(block, 'THEN', consequent);
       Blocklify.JavaScript.importer.appendValueInput(block, 'ELSE', alternate);
       break;
+    case "ForStatement":    // controls_repeat_ext, controls_for
+      var blockType;
+      // All conditions for pattern recognizing
+      // controls_repeat_ext
+      // -- initializer conditions
+      var flag = (node.init.type == 'VariableDeclaration' && node.init.declarations.length == 1)
+              && (node.init.declarations[0].init.type == 'Literal')
+              && (node.init.declarations[0].id.name.substr(0,5) == 'count') && (node.init.declarations[0].init.value == 0);
+      // -- test conditions
+      flag = flag && (node.test.type == 'BinaryExpression' && node.test.left.type == 'Identifier'
+                      && node.test.operator == '<'
+                      && node.test.left.name == node.init.declarations[0].id.name);
+      // -- update conditions
+      flag = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
+                      && node.update.argument.type == 'Identifier' && node.test.left.name == node.update.argument.name);
+      // TODO: search in the body for uses of 'count' (advanced feature - AST node search), now any for with 'count' initializer and acomplish
+      //       with the pattern will be converted in this block and may be some variable conflicts with Blockly core blocks
+      if (flag) {
+        blockType = 'controls_repeat_ext';
+      } else {
+        // controls_for
+        // -- initializer conditions
+        flag = (node.init.type == 'AssignmentExpression')
+                && (node.init.left.name == node.test.left.name)
+                && (node.init.left.type == 'Identifier') && (node.init.right.type == 'Literal');
+        // -- update conditions
+        var byValue;
+        flag = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
+                      && node.update.argument.type == 'Identifier' && node.test.left.name == node.update.argument.name);
+        if (flag) {
+          byValue = '1';
+        }
+        var flag2 = (node.update.type == 'AssignmentExpression' && node.update.operator == '+='
+                      && node.update.left.type == 'Identifier' && node.test.left.name == node.update.left.name);
+        flag2 = flag2 && (node.update.right.type == 'Literal');
+        if (flag2) {
+          byValue = node.update.right.raw;
+        }
+        flag = flag || flag2;
+        if (flag) {  // controls_for
+          blockType = 'controls_for';
+        }
+      }
+      
+      if (blockType == 'controls_repeat_ext') {
+        block = Blocklify.JavaScript.importer.createBlock('controls_repeat_ext');
+        var times = Blocklify.JavaScript.importer.convert_atomic(node.test.right, node, options);
+        var body = Blocklify.JavaScript.importer.convert_atomic(node.body, node, options);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'TIMES', times);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
+        break;
+      } else if (blockType == 'controls_for') {
+        block = Blocklify.JavaScript.importer.createBlock('controls_for');
+        Blocklify.JavaScript.importer.appendField(block, 'VAR', node.test.left.name);
+        var from = Blocklify.JavaScript.importer.convert_atomic(node.init.right, node, options);
+        var to = Blocklify.JavaScript.importer.convert_atomic(node.test.right, node, options);
+        var by = Blocklify.JavaScript.importer.createBlock('math_number');
+        Blocklify.JavaScript.importer.appendField(by, 'NUM', byValue);
+        var body = Blocklify.JavaScript.importer.convert_atomic(node.body, node, options);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'FROM', from);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'TO', to);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'BY', by);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
+      }
       
     default:  // if not implemented block
       break;
