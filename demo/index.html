@@ -25,11 +25,30 @@
 </head>
 <body onload='onload()'>
   <h1>Blocklify demo</h1>
-  <p>This is a demo of how show JavaScript code in blocks and generate that code.</p>
-  <table id='container'> <!-- TODO: layout with flexbox -->
-  <button id='toggle' onclick="toggle();">Show blocks</button>
-  <br/>
-  <textarea id="code" spellcheck="false" style="height: 80vh; width: 80vw;"></textarea>
-  <div id="blocklyDiv" style="height: 80vh; width: 80vw;"></div>
+  <p>This is a demo of how show JavaScript code in blocks and generate that code. (only diference with playground is that here use the compressed blocklify)</p>
+  <table id='container'><!-- TODO: layout with flexbox -->
+    <tr>
+      <td width='38%'>
+        <button onclick="parse_code();">Parse code</button>
+      </td>
+      <td width='2%'>
+        &nbsp
+      </td>
+      <td width='60%' style="vertical-align: top;">
+        <button onclick="parse_blocks();">Parse blocks</button>
+      </td>
+    </tr>
+    <tr>
+      <td width='38%'>
+        <textarea id="code" spellcheck="false" style="height: 100%; width: 100%;"></textarea>
+      </td>
+      <td width='2%'>
+        &nbsp
+      </td>
+      <td width='60%' style="vertical-align: top;">
+        <div id="blocklyDiv" style="height: 80vh; width: 60vw;"></div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

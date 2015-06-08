@@ -30,34 +30,6 @@ var onload = function () {
 	document.body.appendChild(toolbox_div);
 	mainWorkspace = Blockly.inject(blockly_div,
 	        {toolbox: document.getElementById('javascript_toolbox'), media: "../blockly/media/"});
-	setTimeout(function (){
-		//expect for rendering
-		blockly_div.style.display = "none";
-	},100);
-};
-var toggle = function () {
-	var toggle_btn = document.getElementById('toggle');
-	var blockly_div = document.getElementById('blocklyDiv');
-	var code = document.getElementById('code');
-
-	if (blockly_div.style.display == "none") {
-		code.style.display = "none";
-		setTimeout(function (){
-			//expect for rendering
-			blockly_div.style.display = "block";
-			toggle_btn.innerHTML = "Show code";
-			parse_code();
-		},100);
-	} else {
-		Blockly.hideChaff();
-		setTimeout(function (){
-			//expect for rendering
-			blockly_div.style.display = "none";
-			code.style.display = "block";
-			toggle_btn.innerHTML = "Show blocks";
-			parse_blocks();
-		},100);
-	}
 };
 
 var delete_all_blocks = function() {

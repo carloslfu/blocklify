@@ -40,11 +40,17 @@
       font-weight: normal;
       font-size: 140%;
     }
+    .categoryBlockly{
+      background-color: cornflowerblue;
+    }
+    .categoryJavaScript {
+      background-color: deeppink;
+    }
   </style>
 </head>
 <body onload='onload()'>
-  <h1>Blocklify playground</h1>
-  <p>This is a testing page.</p>
+  <h1>Blocklify pattern playground</h1>
+  <p>Pattern matching playground for blockly blocks.</p>
   <table id='container'><!-- TODO: layout with flexbox -->
     <tr>
       <td width='38%'>
@@ -70,6 +76,8 @@
     </tr>
   </table>
   <xml id="blockly_toolbox" style="display: none">
+    <category name="Blockly">
+    </category>
     <category name="Logic">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>

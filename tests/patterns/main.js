@@ -39,6 +39,14 @@ var onload = function() {
   //toolbox.innerHTML += javascript_toolbox; // TODO: report bug, innerHTML with sep element doesn't work properly
   mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
           {toolbox: toolbox, media: "../../blockly/media/"});
+  var el = document.getElementById(':1'),
+  elClone = el.cloneNode(true);
+  el.parentNode.replaceChild(elClone, el);
+  elClone.children[0].setAttribute('class', 'categoryBlockly');
+  el = document.getElementById(':d');
+  elClone = el.cloneNode(true);
+  el.parentNode.replaceChild(elClone, el);
+  elClone.children[0].setAttribute('class', 'categoryJavaScript');
 };
 
 var delete_all_blocks = function() {
