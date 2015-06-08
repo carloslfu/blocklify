@@ -14,8 +14,8 @@
     - controls_repeat_ext       // IMPLEMENTED -> "ForStatement" -> var handling: if initializer name starts with 'count' this block is rendered
     - controls_whileUntil       // IMPLEMENTED -> "WhileStatement"
     - controls_for              // IMPLEMENTED -> "ForStatement"
-    - controls_forEach
-    - controls_flow_statements
+    - controls_forEach          // IMPLEMENTED -> "ForInStatement"
+    - controls_flow_statements  // ...
   * Math
     - math_number               // IMPLEMENTED -> "Literal"
     - math_arithmetic           // IMPLEMENTED -> "BinaryExpression"
@@ -60,6 +60,10 @@
     - colour_rgb
     - colour_blend
   * Variables
+    - variables_set           // IMPLEMENTED -> "VariabeDeclaration" could not generate the same code
+                              // because in Blockly core not are a variable multiple initialization block.
+                              // (not multiple - partially)
+    - variables_get
   * Functions
 */
 
@@ -70,6 +74,15 @@ for (var el in Blocklify.JavaScript.Generator) {
     Blockly.JavaScript[el] = Blocklify.JavaScript.Generator[el];
   }
 }
+
+// Probably useless
+/*Blockly.JavaScript.statementName = function(node) {
+  if (node.type == 'Program') {
+    return 'body';
+  } else if (node.type == 'BlockStatement') {
+    return 'body';
+  }
+};*/
 
 // now the block importer
 Blockly.JavaScript.importer = function(node, parent, options) {
@@ -261,6 +274,41 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         Blocklify.JavaScript.importer.appendValueInput(block, 'TO', to);
         Blocklify.JavaScript.importer.appendValueInput(block, 'BY', by);
         Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
+      }
+    case "ForInStatement":    // controls_forEach
+      var flag = true;
+      if (flag) {
+        block = Blocklify.JavaScript.importer.createBlock('controls_forEach');
+        // cut the first statement: 'i = i_list[i_index];'
+        node.body.body = node.body.body.slice(1);
+        var varName = node.left.declarations[0].id.name.substr(0, node.left.declarations[0].id.name.length - 6);
+        var list = Blocklify.JavaScript.importer.convert_atomic(node.right, node, options);
+        var body = Blocklify.JavaScript.importer.convert_atomic(node.body, node, options);
+        Blocklify.JavaScript.importer.appendField(block, 'VAR', varName);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'LIST', list);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
+        break;
+      }
+    case "VariableDeclaration":   // variables_set
+      if (parent.type == 'Program' || parent.type == 'BlockStatement') {
+        if (node.declarations.length == 1) {
+          if (node.declarations[0].init == null) {
+            block = 'Ignore'; // Ignore declarations like 'var i;' beause Blockly handle this itself
+            break;
+          } else if (parent.body[options.statementIndex + 1]
+                     && parent.body[options.statementIndex + 1].type == 'ForInStatement'
+                     && parent.body[options.statementIndex + 1].right.type == 'Identifier'
+                     && node.declarations[0].id.name == parent.body[options.statementIndex + 1].right.name) {
+            parent.body[options.statementIndex + 1].right = node.declarations[0].init;
+            block = 'Ignore'; // Ignore declarations like 'var i;' beause Blockly handle this itself
+            break;
+          } else { // variables_set
+            block = Blocklify.JavaScript.importer.createBlock('variables_set');
+            Blocklify.JavaScript.importer.appendField(block, 'VAR', node.declarations[0].id.name);
+            var value = Blocklify.JavaScript.importer.convert_atomic(node.declarations[0].init, node, options);
+            Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', value);
+          }
+        }
       }
       
     default:  // if not implemented block

@@ -75,19 +75,32 @@ Blocklify.JavaScript.importer.appendStatement = function(block, statements, pare
   if (statements.length == 0) {
     return; // returns undefined
   }
+  options = goog.cloneObject(options);
+  options.statementIndex = 0;
   rootBlock = Blocklify.JavaScript.importer.convert_atomic(statements[0], parent, options);
   lastBlock = rootBlock;
   for (var i = 1; i < statements.length; i++) {
     tempBlock = goog.dom.createDom('next');
+    options = goog.cloneObject(options);
+    options.statementIndex = i;
     statementBlock = Blocklify.JavaScript.importer.convert_atomic(statements[i], parent, options);
     if (typeof(statementBlock) == 'object') {
       tempBlock.appendChild(statementBlock);
-      lastBlock.appendChild(tempBlock);
-      lastBlock = statementBlock;
+      if (typeof(lastBlock) == 'object') {
+        lastBlock.appendChild(tempBlock);
+        lastBlock = statementBlock;
+      } else if (typeof(rootBlock) == 'object') {
+        lastBlock = statementBlock;
+      } else {
+        rootBlock = statementBlock;
+        lastBlock = statementBlock;
+      }
     }
   };
   if (block == null) {
     return rootBlock;
+  } else if (rootBlock == 'Ignore') {
+    // Ignore rootBlock
   } else {
     block.appendChild(rootBlock);
   }
@@ -133,6 +146,10 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       && (patternNotImplemented == undefined || patternNotImplemented == false)) {
     block = Blocklify.JavaScript.importer.convert_pattern(node, parent, options);
     if (block != null) {
+      return block;
+    }
+    if (block == 'Ignore') {
+      // this ignore the block
       return block;
     }
   }
