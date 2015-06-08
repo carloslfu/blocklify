@@ -420,7 +420,7 @@ Blocklify.JavaScript.importer.convert_pattern = function(node, parent, options) 
   var len = this.importers.length, block = null;
   // search the pattern in importers
   for (var i = 0; i < len; i++) {
-    block = this.importers[i](node, parent, options);
+    block = (this.importers[i].bind(this))(node, parent, options);
     if (block !== null) {
       break;
     }
