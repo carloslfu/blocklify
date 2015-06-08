@@ -42,9 +42,17 @@
     }
     .categoryBlockly{
       background-color: cornflowerblue;
+      line-height: 22px;
+      height: 22px;
+      padding-right: 1em;
+      white-space: nowrap;
     }
     .categoryJavaScript {
       background-color: deeppink;
+      line-height: 22px;
+      height: 22px;
+      padding-right: 1em;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -54,6 +62,13 @@
   <table id='container'><!-- TODO: layout with flexbox -->
     <tr>
       <td width='38%'>
+        Mode:&nbsp;
+        <select id='modeSelect'>
+          <option value='atomic'>Atomic</option>
+          <option value='pattern'>Pattern</option>
+          <option value='mixed' selected>Mixed</option>
+        </select>
+        &nbsp;&nbsp;
         <button onclick="parse_code();">Parse code</button>
       </td>
       <td width='2%'>

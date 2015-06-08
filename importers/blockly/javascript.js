@@ -99,6 +99,9 @@ Blockly.JavaScript.importer = function(node, parent, options) {
     case "BlockStatement":
       block = Blocklify.JavaScript.importer.appendStatement(null, node.body, node, options);
       break;
+    case "ExpressionStatement":
+      block = Blocklify.JavaScript.importer.convert_atomic(node.expression, node, options);
+      break;
     case "Literal":    // logic_null, math_number, text, logic_boolean
       block = goog.dom.createDom('block');
       if (node.value == null) {
@@ -274,6 +277,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         Blocklify.JavaScript.importer.appendValueInput(block, 'TO', to);
         Blocklify.JavaScript.importer.appendValueInput(block, 'BY', by);
         Blocklify.JavaScript.importer.appendValueInput(block, 'DO', body);
+        break;
       }
     case "ForInStatement":    // controls_forEach
       var flag = true;
@@ -307,6 +311,7 @@ Blockly.JavaScript.importer = function(node, parent, options) {
             Blocklify.JavaScript.importer.appendField(block, 'VAR', node.declarations[0].id.name);
             var value = Blocklify.JavaScript.importer.convert_atomic(node.declarations[0].init, node, options);
             Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', value);
+            break;
           }
         }
       }

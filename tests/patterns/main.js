@@ -50,19 +50,20 @@ var onload = function() {
 };
 
 var delete_all_blocks = function() {
-	mainWorkspace.getAllBlocks().forEach(function (el) {
-		el.dispose(true, false);
-	});
+  mainWorkspace.getAllBlocks().forEach(function (el) {
+    el.dispose(true, false);
+  });
 };
 
 var parse_code = function () {
-	delete_all_blocks();
-	var javascript_code = document.getElementById('code').value;
-	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'mixed'); // TODO: Add a select to the page for all options (atomic, pattern and mixed).
-	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
+  delete_all_blocks();
+  var javascript_code = document.getElementById('code').value;
+  var mode = document.getElementById('modeSelect').value;
+  var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, mode);
+  Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
 };
 
 var parse_blocks = function () {
-	var output = document.getElementById('code');
-  	output.value = Blockly.JavaScript.workspaceToCode(mainWorkspace);
+  var output = document.getElementById('code');
+  output.value = Blockly.JavaScript.workspaceToCode(mainWorkspace);
 };
