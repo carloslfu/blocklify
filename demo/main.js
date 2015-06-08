@@ -30,6 +30,9 @@ var onload = function () {
 	document.body.appendChild(toolbox_div);
 	mainWorkspace = Blockly.inject(blockly_div,
 	        {toolbox: document.getElementById('javascript_toolbox'), media: "../blockly/media/"});
+
+  // charges the example code
+  document.getElementById('code').value = exampleCode;
 };
 
 var delete_all_blocks = function() {
@@ -49,3 +52,20 @@ var parse_blocks = function () {
 	var output = document.getElementById('code');
   	output.value = Blocklify.JavaScript.Generator.workspaceToCode(mainWorkspace);
 };
+
+var exampleCode = 
+  "var product = 1;\n" +
+  "var factorial = 1;\n" +
+  "var A = 10;\n" +
+  "var B = 4;\n" +
+  "\n" +
+  "for (var count = 0; count < B; count++) {\n" +
+  "  product = product * A;\n" +
+  "}\n" +
+  "if (B < 0) {\n" +
+  "  factorial = 0;\n" +
+  "} else {\n" +
+  "  for (var i = 1; i <= A; i++) {\n" +
+  "    factorial = factorial * i;\n" +
+  "  }\n" +
+  "}\n";
