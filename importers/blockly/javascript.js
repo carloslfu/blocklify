@@ -14,6 +14,7 @@
     - controls_repeat_ext       // IMPLEMENTED -> "ForStatement" -> var handling: if initializer name starts with 'count' this block is rendered
     - controls_whileUntil       // IMPLEMENTED -> "WhileStatement"
     - controls_for              // IMPLEMENTED -> "ForStatement"
+    // NOTE that could not generate the same code because initializer may be a VariableDeclaration or AssignmentExpression
     - controls_forEach          // IMPLEMENTED -> "ForInStatement"
     - controls_flow_statements  // ...
   * Math
@@ -187,15 +188,15 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         this.appendField(block, 'OP', operators[node.operator]);
         this.appendValueInput(block, 'A', A);
         this.appendValueInput(block, 'B', B);
-        break;
       }
+      break;
     case "UnaryExpression":    // logic_negate
       if (node.operator == '!') {
         block = this.createBlock('logic_negate');
         var argument = this.convert_atomic(node.argument, node, options);
         this.appendValueInput(block, 'BOOL', argument);
-        break;
       }
+      break;
     case "ConditionalExpression":    // logic_ternary
       block = this.createBlock('logic_ternary');
       var test = this.convert_atomic(node.test, node, options);
@@ -226,11 +227,23 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         blockType = 'controls_repeat_ext';
       } else {
         // controls_for
-        // -- initializer conditions
-        flag = (node.init.type == 'AssignmentExpression')
+        // -- initializer conditions: with VariableDeclaration or AssignmentExpression because hoisting make this the same thing
+        //       NOTE that no generate the same code because the generator always uses an AssignmentExpression.
+        var fromNode;
+        var flag_init_asignment = (node.init.type == 'AssignmentExpression')
                 && (node.init.left.name == node.test.left.name)
-                && (node.init.left.type == 'Identifier') && (node.init.right.type == 'Literal');
-        // -- update conditions
+                && (node.init.left.type == 'Identifier');
+        if (flag_init_asignment) {
+          fromNode = node.init.right;
+        }
+        var flag_init_declaration = (node.init.type == 'VariableDeclaration')
+                && (node.init.declarations[0].id.name == node.test.left.name)
+                && (node.init.declarations[0].id.type == 'Identifier');
+        if (flag_init_declaration) {
+          fromNode = node.init.declarations[0].init;
+        }
+        flag = flag_init_asignment || flag_init_declaration;
+        // -- update conditions: with UpdateExpression or AssignmentExpression
         var byValue;
         var flag1 = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
                       && node.update.argument.type == 'Identifier' && node.test.left.name == node.update.argument.name);
@@ -248,18 +261,16 @@ Blockly.JavaScript.importer = function(node, parent, options) {
           blockType = 'controls_for';
         }
       }
-      
       if (blockType == 'controls_repeat_ext') {
         block = this.createBlock('controls_repeat_ext');
         var times = this.convert_atomic(node.test.right, node, options);
         var body = this.convert_atomic(node.body, node, options);
         this.appendValueInput(block, 'TIMES', times);
         this.appendValueInput(block, 'DO', body);
-        break;
       } else if (blockType == 'controls_for') {
         block = this.createBlock('controls_for');
         this.appendField(block, 'VAR', node.test.left.name);
-        var from = this.convert_atomic(node.init.right, node, options);
+        var from = this.convert_atomic(fromNode, node, options);
         var to = this.convert_atomic(node.test.right, node, options);
         var by = this.createBlock('math_number');
         this.appendField(by, 'NUM', byValue);
@@ -268,8 +279,8 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         this.appendValueInput(block, 'TO', to);
         this.appendValueInput(block, 'BY', by);
         this.appendValueInput(block, 'DO', body);
-        break;
       }
+      break;
     case "ForInStatement":    // controls_forEach
       var flag = true; // TODO: validations for this pattern ...
       if (flag) {
@@ -282,14 +293,13 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         this.appendField(block, 'VAR', varName);
         this.appendValueInput(block, 'LIST', list);
         this.appendValueInput(block, 'DO', body);
-        break;
       }
+      break;
     case "VariableDeclaration":   // variables_set
       if (parent.type == 'Program' || parent.type == 'BlockStatement') {
         if (node.declarations.length == 1) {
           if (node.declarations[0].init == null) {
             block = 'Ignore'; // Ignore declarations like 'var i;' beause Blockly handle this itself
-            break;
           } else if (parent.body[options.statementIndex + 1]
                      && parent.body[options.statementIndex + 1].type == 'ForInStatement'
                      && parent.body[options.statementIndex + 1].right.type == 'Identifier'
@@ -302,18 +312,18 @@ Blockly.JavaScript.importer = function(node, parent, options) {
             this.appendField(block, 'VAR', node.declarations[0].id.name);
             var value = this.convert_atomic(node.declarations[0].init, node, options);
             this.appendValueInput(block, 'VALUE', value);
-            break;
           }
         }
       }
+      break;
     case "AssignmentExpression":    // variables_set
       if (node.left.type == 'Identifier' && node.operator == '=') {
         block = this.createBlock('variables_set');
         this.appendField(block, 'VAR', node.left.name);
         var value = this.convert_atomic(node.right, node, options);
         this.appendValueInput(block, 'VALUE', value);
-        break;
       }
+      break;
       
     default:  // if not implemented block
       break;
