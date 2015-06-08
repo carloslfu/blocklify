@@ -60,7 +60,7 @@
     - colour_rgb
     - colour_blend
   * Variables
-    - variables_set           // IMPLEMENTED -> "VariabeDeclaration" could not generate the same code
+    - variables_set           // IMPLEMENTED -> "VariabeDeclaration", "AssignmentExpression" could not generate the same code
                               // because in Blockly core not are a variable multiple initialization block.
                               // (not multiple - partially)
     - variables_get
@@ -309,6 +309,14 @@ Blockly.JavaScript.importer = function(node, parent, options) {
             Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', value);
           }
         }
+      }
+    case "AssignmentExpression":    // variables_set
+      if (node.left.type == 'Identifier' && node.operator == '=') {
+        block = Blocklify.JavaScript.importer.createBlock('variables_set');
+        Blocklify.JavaScript.importer.appendField(block, 'VAR', node.left.name);
+        var value = Blocklify.JavaScript.importer.convert_atomic(node.right, node, options);
+        Blocklify.JavaScript.importer.appendValueInput(block, 'VALUE', value);
+        break;
       }
       
     default:  // if not implemented block
