@@ -17,3 +17,7 @@ Patterns are blocks that represents high level abstractions of the code, for exa
 ### Mixed converter
 
 This converter allows use both atomic and pattern converter for importing code. This feature is not yet implemented, work in progress.
+
+## Code structure
+
+Incoming...

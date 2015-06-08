@@ -12,8 +12,3 @@ If you are interested in give support for your custom blocks see if the source l
 ## Giving support for a language
 
 Incoming...
-
-
-## Code structure
-
-Incoming...
