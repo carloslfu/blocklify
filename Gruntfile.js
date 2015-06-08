@@ -8,7 +8,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'javascript/parser/acorn.js',
-                    'blocklify.js',
+                    'core/blocklify.js',
                     'javascript/javascript.js',
                     'javascript/generator.js',
                     'javascript/importer.js',
