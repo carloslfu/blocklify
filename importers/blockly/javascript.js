@@ -2,14 +2,19 @@
 /*
 NOTES:
 
-- Dome blocks don't acepts generate the same code beacause Blockly core generators aren't designed for it.
-- Core blocks don't handle scopes, all is global.
+  - Blockly core blocks don't handle scopes, all is global.
 
-If you need generate the same code that you import, you should design or implement your code generator with this in mind.
-
+  - If you need generate the same code that you import, you should design or implement your code generator with this in mind
+    or do many importers for each case.
+  
+importers TODOs:
+  - controls_for needs generate the same code, for this need implement some cases.
+  - controls_repeat_ext needs to search for use of counter
+    inside the do-statemet for best pattern recognizing (not only counters that starts with 'count')
+  - controls_forEach needs the same for '_list'.
 */
 
-// List of blockly blocks, info about this importer implementation and the case in which implements.
+// List of blockly blocks, info about this importer implementation and the case in which implements (TODO: complete it!).
 /*
   * Logic
     - controls_if               // IMPLEMENTED -> "IfStatement"
