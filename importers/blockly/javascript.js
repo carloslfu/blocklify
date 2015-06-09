@@ -1,4 +1,13 @@
 // Example of importer for blockly core blocks. Importer API experiment - work in progress, importer will be a class.
+/*
+NOTES:
+
+- Dome blocks don't acepts generate the same code beacause Blockly core generators aren't designed for it.
+- Core blocks don't handle scopes, all is global.
+
+If you need generate the same code that you import, you should design or implement your code generator with this in mind.
+
+*/
 
 // List of blockly blocks, info about this importer implementation and the case in which implements.
 /*
@@ -18,7 +27,7 @@
     - controls_forEach          // IMPLEMENTED -> "ForInStatement"
     - controls_flow_statements  // ...
   * Math
-    - math_number               // IMPLEMENTED -> "Literal"
+    - math_number               // IMPLEMENTED -> "Literal", "UnaryExpression": for negative numbers
     - math_arithmetic           // IMPLEMENTED -> "BinaryExpression"
     - math_single
     - math_trig
@@ -61,9 +70,9 @@
     - colour_rgb
     - colour_blend
   * Variables
-    - variables_set           // IMPLEMENTED -> "VariabeDeclaration", "AssignmentExpression" could not generate the same code
-                              // because in Blockly core not are a variable multiple initialization block.
-                              // (not multiple - partially)
+    - variables_set           // IMPLEMENTED -> "VariabeDeclaration", "AssignmentExpression", "MemberExpression"
+    //  could not generate the same code because in Blockly core not are a variable multiple initialization block.
+    // (not multiple - partially)
     - variables_get
   * Functions
 */
@@ -190,11 +199,16 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         this.appendValueInput(block, 'B', B);
       }
       break;
-    case "UnaryExpression":    // logic_negate
+    case "UnaryExpression":    // logic_negate, math_number
       if (node.operator == '!') {
         block = this.createBlock('logic_negate');
         var argument = this.convert_atomic(node.argument, node, options);
         this.appendValueInput(block, 'BOOL', argument);
+      } else if (node.operator == '-') {
+        if (node.argument.type == 'Literal' && typeof(node.argument.value) == 'number') {
+          block = this.createBlock('math_number');
+          this.appendField(block, 'NUM', -node.argument.value + '');
+        }
       }
       break;
     case "ConditionalExpression":    // logic_ternary
@@ -227,6 +241,11 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         blockType = 'controls_repeat_ext';
       } else {
         // controls_for
+        // -- test conditions
+        flag = node.test.type == 'BinaryExpression';
+        if (!flag) {
+          break; // not is the pattern
+        }
         // -- initializer conditions: with VariableDeclaration or AssignmentExpression because hoisting make this the same thing
         //       NOTE that no generate the same code because the generator always uses an AssignmentExpression.
         var fromNode;
@@ -242,19 +261,18 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         if (flag_init_declaration) {
           fromNode = node.init.declarations[0].init;
         }
-        flag = flag_init_asignment || flag_init_declaration;
+        flag = flag && (flag_init_asignment || flag_init_declaration);
         // -- update conditions: with UpdateExpression or AssignmentExpression
         var byValue;
         var flag1 = flag && (node.update.type == 'UpdateExpression' && node.update.operator == '++'
                       && node.update.argument.type == 'Identifier' && node.test.left.name == node.update.argument.name);
         if (flag1) {
-          byValue = '1';
+          byType = 'increment';
         }
         var flag2 = (node.update.type == 'AssignmentExpression' && node.update.operator == '+='
                       && node.update.left.type == 'Identifier' && node.test.left.name == node.update.left.name);
-        flag2 = flag2 && (node.update.right.type == 'Literal');
         if (flag2) {
-          byValue = node.update.right.raw;
+          byType = 'block';
         }
         flag = flag && (flag1 || flag2);
         if (flag) {  // controls_for
@@ -272,8 +290,13 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         this.appendField(block, 'VAR', node.test.left.name);
         var from = this.convert_atomic(fromNode, node, options);
         var to = this.convert_atomic(node.test.right, node, options);
-        var by = this.createBlock('math_number');
-        this.appendField(by, 'NUM', byValue);
+        var by;
+        if (byType == 'increment') {
+          by = this.createBlock('math_number');
+          this.appendField(by, 'NUM', '1');
+        } else if (byType == 'block') {
+          by = this.convert_atomic(node.update.right, node, options);
+        }
         var body = this.convert_atomic(node.body, node, options);
         this.appendValueInput(block, 'FROM', from);
         this.appendValueInput(block, 'TO', to);
@@ -323,6 +346,28 @@ Blockly.JavaScript.importer = function(node, parent, options) {
         var value = this.convert_atomic(node.right, node, options);
         this.appendValueInput(block, 'VALUE', value);
       }
+      break;
+    case "Identifier":    // variables_get
+      block = this.createBlock('variables_get');
+      this.appendField(block, 'VAR', node.name);
+      break;
+    case "MemberExpression": // variables_get
+      // members expresions are converted in a variables_get block beacuse Blockly core blocks don't handle objects
+      var current_node = node, count = 2, memberBlock, member, parentM = node;
+      while (current_node.object.type == "MemberExpression") {
+        count++;
+        current_node = current_node.object;
+      }
+      block = this.createBlock('variables_get');
+      var expressionNames = [];
+      for (var i = count-1, current_node = node; i >= 0; i--) {
+        //condition for final node
+        member = (i == 0)?current_node:current_node.property;
+        expressionNames[i] = member.name;
+        current_node = current_node.object;
+        parentM = current_node;
+      };
+      this.appendField(block, 'VAR', expressionNames.join('.'));
       break;
       
     default:  // if not implemented block
