@@ -68,16 +68,31 @@ Blockly.Blocks['js_assignment_expression'] = {
       ['<<=', '<<='],
       ['>>>=', '>>>=']
     ];
-    this.setColour(330);
-    this.setPreviousStatement(true, 'Statement');
-    this.setNextStatement(true, 'Statement');
-    this.interpolateMsg(
-        'set %1 %2 %3',
-        ['VAR', null],
-        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
-        ['VALUE', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Assignment expression.');
+    this.jsonInit({
+      "id": "js_assignment_expression",
+      "message0": "set %1 %2 %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VAR"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": OPERATORS
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 330,
+      "previousStatement": "Statement",
+      "nextStatement": "Statement",
+      "inputsInline": true,
+      "tooltip": "Assignment expression."
+    });
   }
 };
 Blockly.Blocks['js_update_expression_prefix'] = {
@@ -90,15 +105,27 @@ Blockly.Blocks['js_update_expression_prefix'] = {
       ['++', '++'],
       ['--', '--']
     ];
-    this.setColour(230);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.interpolateMsg(
-        '%1 %2',
-        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
-        ['ARGUMENT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Update expression with prefix.');
+    this.jsonInit({
+      "id": "js_update_expression_prefix",
+      "message0": "%1 %2",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": OPERATORS
+        },
+        {
+          "type": "input_value",
+          "name": "ARGUMENT",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 230,
+      "previousStatement": null,
+      "nextStatement": null,
+      "inputsInline": true,
+      "tooltip": "Update expression with prefix."
+    });
     Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
@@ -154,15 +181,30 @@ Blockly.Blocks['js_binary_expression'] = {
       ['<<', '<<'],
       ['>>>', '>>>']
     ];
-    this.setColour(230);
-    this.setOutput(true);
-    this.interpolateMsg(
-        '%1 %2 %3',
-        ['LEFT', null],
-        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
-        ['RIGHT', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Binary expression.');
+    this.jsonInit({
+      "id": "js_assignment_expression",
+      "message0": "%1 %2 %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "LEFT"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": OPERATORS
+        },
+        {
+          "type": "input_value",
+          "name": "RIGHT",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 230,
+      "output": null,
+      "inputsInline": true,
+      "tooltip": "Binary expression."
+    });
   }
 };
 
@@ -182,7 +224,7 @@ Blockly.Blocks['js_unary_expression'] = {
     this.appendValueInput('ARGUMENT')
       .appendField(new Blockly.FieldDropdown(OPERATORS), 'OPERATOR')
       .setAlign(Blockly.ALIGN_RIGHT);
-    this.setTooltip('Binary expression.');
+    this.setTooltip('Unary expression.');
   }
 };
 

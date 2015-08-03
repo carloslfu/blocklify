@@ -15,6 +15,19 @@ Blocklify.JavaScript.Generator['js_assignment_expression'] = function(block) {
   }
 };
 
+Blocklify.JavaScript.Generator['js_unary_expression'] = function(block) {
+  var operator = block.getFieldValue('OPERATOR');
+  var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
+      Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);
+  var code = operator + ' ' + argument;
+  //If has output returns a tuple with the order of precedence
+  if (block.outputConnection) {
+    return [code, Blocklify.JavaScript.Generator.ORDER_UNARY_NEGATION];
+  } else {
+    return code + ';\n';
+  }
+};
+
 Blocklify.JavaScript.Generator['js_update_expression_prefix'] = function(block) {
   var argument = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT',
       Blocklify.JavaScript.Generator.ORDER_ASSIGNMENT);

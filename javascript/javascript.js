@@ -91,6 +91,7 @@ Blocklify.JavaScript.toolbox =
     '</category>' +
     '<category name="Expressions">' +
       '<block type="js_assignment_expression"></block>' +
+      '<block type="js_unary_expression"></block>' +
       '<block type="js_binary_expression"></block>' +
       '<block type="js_array_expression"></block>' +
       '<block type="js_member_expression"></block>' +
@@ -106,9 +107,8 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_function_expression"></block>' +
       '<block type="js_anonimous_function_expression"></block>' +
       '<block type="js_call_expression"></block>' +
-      '<block type="js_unary_expression"></block>' +
     '</category>' +
     /*'<category name="Custom">' +
       '<block type="js_blocklify"></block>' +
-    '</category>' +*/
+    '</category>' +*/ // Disabled until Blockly supports a text area field
   '</xml>';
