@@ -22,7 +22,7 @@
 
 // TODOs:
 //  - Convert this in an instatiable class, not singleton (Mixin with Blocklify.importer('JavaScript')).
-//  - Support for: NewExpression, LogicalExpression, ThrowStatement, UnaryExpression, ForStatement (how is best?).
+//  - Support for: NewExpression, LogicalExpression, ThrowStatement, ForStatement.
 
 goog.provide('Blocklify.JavaScript.importer');
 
@@ -34,7 +34,7 @@ Blocklify.JavaScript.importer = new Blocklify.importer('JavaScript');
 
 Blocklify.JavaScript.importer.astParser = Blocklify.JavaScript.astParser;
 
-//none-estetic inline blocks
+// None - estetic inline blocks
 Blocklify.JavaScript.importer.no_inline_atomic_blocks = ["FunctionExpression", "ObjectExpression"];
 
 Blocklify.JavaScript.importer.convert = function(node, parent, level) {
@@ -340,6 +340,13 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       this.appendValueInput(block, 'LEFT', leftBlock);
       this.appendField(block, 'OPERATOR', node.operator);
       this.appendValueInput(block, 'RIGHT', rightBlock);
+      break;
+    case "UnaryExpression":
+      block = this.createBlock('js_unary_expression');
+      var argBlock = this.convert_atomic(node.argument, node);
+      this.setOutput(argBlock, true);
+      this.appendValueInput(block, 'ARGUMENT', argBlock);
+      this.appendField(block, 'OPERATOR', node.operator);
       break;
     case "ObjectExpression":
       block = this.createBlock('js_json_object');

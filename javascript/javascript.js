@@ -106,6 +106,7 @@ Blocklify.JavaScript.toolbox =
       '<block type="js_function_expression"></block>' +
       '<block type="js_anonimous_function_expression"></block>' +
       '<block type="js_call_expression"></block>' +
+      '<block type="js_unary_expression"></block>' +
     '</category>' +
     /*'<category name="Custom">' +
       '<block type="js_blocklify"></block>' +

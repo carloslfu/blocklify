@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+// Global TODOs:
+// - Fix all broken blocks that are using the deprecated interpolateMsg method.
+
 /**
  * @fileoverview Helper functions for generate parsers from any language to blocks (Dont use renderer - outdated).
  * @author carloslfu@gmail.com (Carlos Galarza)

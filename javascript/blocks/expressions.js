@@ -166,7 +166,27 @@ Blockly.Blocks['js_binary_expression'] = {
   }
 };
 
-//Member expressions
+// Unary expressions
+Blockly.Blocks['js_unary_expression'] = {
+  /**
+   * Block for redering a binary expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    var OPERATORS = [
+      ['+', '+'],
+      ['-', '-']
+    ];
+    this.setColour(230);
+    this.setOutput(true);
+    this.appendValueInput('ARGUMENT')
+      .appendField(new Blockly.FieldDropdown(OPERATORS), 'OPERATOR')
+      .setAlign(Blockly.ALIGN_RIGHT);
+    this.setTooltip('Binary expression.');
+  }
+};
+
+// Member expressions
 Blockly.Blocks['js_member_expression'] = {
   /**
    * Block for redering a member expression.
