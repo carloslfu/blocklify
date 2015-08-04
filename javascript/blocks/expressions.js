@@ -139,15 +139,27 @@ Blockly.Blocks['js_update_expression_noprefix'] = {
       ['++', '++'],
       ['--', '--']
     ];
-    this.setColour(230);
-    this.setPreviousStatement(true, 'Statement');
-    this.setNextStatement(true, 'Statement');
-    this.interpolateMsg(
-        '%1 %2',
-        ['ARGUMENT', null],
-        ['OPERATOR', new Blockly.FieldDropdown(OPERATORS)],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Update expression without prefix.');
+    this.jsonInit({
+      "id": "js_update_expression_noprefix",
+      "message0": "%1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "ARGUMENT"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": OPERATORS,
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 230,
+      "previousStatement": "Statement",
+      "nextStatement": "Statement",
+      "inputsInline": true,
+      "tooltip": "Update expression without prefix."
+    });
     Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
@@ -182,7 +194,7 @@ Blockly.Blocks['js_binary_expression'] = {
       ['>>>', '>>>']
     ];
     this.jsonInit({
-      "id": "js_assignment_expression",
+      "id": "js_binary_expression",
       "message0": "%1 %2 %3",
       "args0": [
         {

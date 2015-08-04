@@ -88,16 +88,26 @@ Blockly.Blocks['js_json_object'] = {
 };
 Blockly.Blocks['js_json_element'] = {
   init: function() {
-    this.setColour(260);
-    this.setPreviousStatement(true, 'js_json_element');
-    this.setNextStatement(true, 'js_json_element');
-    this.interpolateMsg(
-        ' %1 : %2',
-        ['KEY', null],
-        ['VALUE', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setInputsInline(true);
-    this.setTooltip('Element of a object in JSON format.');
+    this.jsonInit({
+      "id": "js_json_element",
+      "message0": "%1 : %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "KEY"
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 260,
+      "previousStatement": "js_json_element",
+      "nextStatement": "js_json_element",
+      "inputsInline": true,
+      "tooltip": "Element of an object in JSON format."
+    });
   }
 };
 Blockly.Blocks['js_identifier'] = {
@@ -111,14 +121,21 @@ Blockly.Blocks['js_identifier'] = {
 };
 Blockly.Blocks['js_computed_member_expression'] = {
   init: function() {
-    this.setColour(160);
-    this.interpolateMsg(
-        '[%1]',
-        ['MEMBER', null],
-        Blockly.ALIGN_RIGHT);
-    this.setOutput(true);
-    this.setInputsInline(true);
-    this.setTooltip("Computed member of member expression.");
+    this.jsonInit({
+      "id": "js_computed_member_expression",
+      "message0": "[%1]",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MEMBER",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 160,
+      "output": true,
+      "inputsInline": true,
+      "tooltip": "Computed member of member expression."
+    });
   }
 };
 Blockly.Blocks['js_variable_declarator'] = {
@@ -127,15 +144,26 @@ Blockly.Blocks['js_variable_declarator'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(330);
-    this.setPreviousStatement(true, 'Declarator');
-    this.setNextStatement(true, 'Declarator');
-    this.interpolateMsg(
-        '%1 = %2',
-        ['VAR', null],
-        ['VALUE', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Variable declarator.');
+    this.jsonInit({
+      "id": "js_variable_declarator",
+      "message0": "%1 = %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VAR"
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 330,
+      "previousStatement": "Declarator",
+      "nextStatement": "Declarator",
+      "inputsInline": true,
+      "tooltip": "Variable declarator."
+    });
   }
 };
 Blockly.Blocks['js_variable_declaration_unary'] = {
@@ -144,15 +172,26 @@ Blockly.Blocks['js_variable_declaration_unary'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setColour(330);
-    this.setPreviousStatement(true, 'Statement');
-    this.setNextStatement(true, 'Statement');
-    this.interpolateMsg(
-        'var %1 = %2',
-        ['VAR', null],
-        ['VALUE', null, Blockly.ALIGN_RIGHT],
-        Blockly.ALIGN_RIGHT);
-    this.setTooltip('Variable declarator unary.');
+    this.jsonInit({
+      "id": "js_variable_declaration_unary",
+      "message0": "var %1 = %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VAR"
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 330,
+      "previousStatement": "Statement",
+      "nextStatement": "Statement",
+      "inputsInline": true,
+      "tooltip": "Variable declaration unary."
+    });
   }
 };
 Blockly.Blocks['js_variable_declaration'] = {
