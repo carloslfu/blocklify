@@ -22,7 +22,7 @@
 
 // TODOs:
 //  - Convert this in an instatiable class, not singleton (Mixin with Blocklify.importer('JavaScript')).
-//  - Support for: NewExpression, LogicalExpression, ThrowStatement, ForStatement.
+//  - Support for: NewExpression, LogicalExpression, ThrowStatement.
 
 goog.provide('Blocklify.JavaScript.importer');
 
@@ -409,6 +409,17 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
     case "ArrayExpression":
       block = this.createBlock('js_array_expression');
       this.appendCloneMutation(block, 'elements', 'ELEMENT', node.elements, node, options);
+      break;
+    case "ForStatement":
+      block = this.createBlock('js_for_statement');
+      var conditionBlock = this.convert_atomic(node.test, node, options);
+      var firstBlock = this.convert_atomic(node.init, node, options);
+      var doBlock = this.convert_atomic(node.body, node, options);
+      var stepBlock = this.convert_atomic(node.update, node, options);
+      this.appendValueInput(block, 'CONDITION', conditionBlock);
+      this.appendValueInput(block, 'FIRST', firstBlock);
+      this.appendValueInput(block, 'DO', doBlock);
+      this.appendValueInput(block, 'STEP', stepBlock);
       break;
     
     default:  // if not implemented block

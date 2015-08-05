@@ -169,6 +169,19 @@ Blocklify.JavaScript.Generator.sequenceToCode = function(block, name) {
   var code = '', blockCode, func = null, i = 0;
   do {
     func = this[nextBlock.type];
+    if (!func) {
+      // Search in external generators
+      for (var i = 0; i < Blocklify.JavaScript.Generator.extrernalSources.length; i++) {
+        func = Blocklify.JavaScript.Generator.extrernalSources[i][nextBlock.type];
+        if (func) {
+          break;
+        }
+      }
+      if (!func) {
+        throw 'Language "' + this.name_ + '" does not know how to generate code ' +
+            'for block type "' + nextBlock.type + '".';
+      }
+    }
     blockCode = ((i !=0 )?' ,':'') + func.call(nextBlock, nextBlock);
     blockCode = blockCode.substring(0, blockCode.length - 2);
     code += blockCode;

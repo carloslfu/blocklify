@@ -19,7 +19,7 @@ Blocklify.JavaScript.Generator['js_for_statement'] = function(block) {
   var statements_step = Blocklify.JavaScript.Generator.sequenceToCode(block, 'STEP');
   // TODO: Assemble JavaScript into code variable.
   var code = 'for (' + statements_first + '; ' + value_condition + '; ' + statements_step + ') {\n' +
-    statements_do + '}';
+    statements_do + '}\n';
   return code;
 };
 
