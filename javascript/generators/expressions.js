@@ -108,3 +108,19 @@ Blocklify.JavaScript.Generator['js_member_expression'] = function(block) {
     return code + ';\n';
   }
 };
+
+Blocklify.JavaScript.Generator['js_new_expression'] = function(block) {
+  var className = Blocklify.JavaScript.Generator.valueToCode(block, 'CLASS',
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  var args = [];
+  for (var i = 0; i < block.argumentCount; i++) {
+    args[i] = Blocklify.JavaScript.Generator.valueToCode(block, 'ARGUMENT' + i,
+      Blocklify.JavaScript.Generator.ORDER_ATOMIC);
+  }
+  var code = 'new ' + className + '(' + args.join(', ') + ')';
+  if (block.outputConnection) {
+    return [code, Blocklify.JavaScript.Generator.ORDER_ATOMIC];
+  } else {
+    return code + ';\n';
+  }
+};

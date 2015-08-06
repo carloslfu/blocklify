@@ -330,7 +330,7 @@ Blockly.Blocks['js_array_expression'] = {
 
 Blockly.Blocks['js_array_expression_container'] = {
   /**
-   * Mutator block for function container.
+   * Mutator block for array container.
    * @this Blockly.Block
    */
   init: function() {
@@ -354,7 +354,69 @@ Blockly.Blocks['js_array_expression_element'] = {
         .appendField("element");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip("Add a element to an array expression.");
+    this.setTooltip("Add an element to an array expression.");
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_new_expression'] = {
+  /**
+   * Block for redering a prefix update expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.setOutput(true);
+    this.appendValueInput('CLASS')
+        .appendField('new ');
+    this.appendValueInput('ARGUMENT0')
+        .appendField('(');
+    this.appendDummyInput('END')
+        .appendField(')');
+    this.setInputsInline(true);
+    this.setMutator(new Blockly.Mutator(['js_new_expression_element']));
+    this.setTooltip('New expression.');
+    this.argumentCount = 1;
+    var argMutator = {
+      name: 'clone',
+      target: 'ARGUMENT',
+      mutatorContainer: 'js_new_expression_container',
+      mutatorArgument: 'js_new_expression_element',
+      elementCount: 'argumentCount',
+      startText: '(',
+      endText: ')'
+    };
+    Blocklify.JavaScript.Blocks.setMutators(this,[argMutator]);
+  }
+};
+
+Blockly.Blocks['js_new_expression_container'] = {
+  /**
+   * Mutator block for new-expression container.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.appendDummyInput()
+        .appendField("constructor");
+    this.appendStatementInput('STACK');
+    this.setTooltip("Add, remove or reorder elements of the new-expression.");
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_new_expression_element'] = {
+  /**
+   * Mutator block for adding arguments to a new-expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(260);
+    this.appendDummyInput()
+        .appendField("argument");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Add a argument to a new-expression.");
     this.contextMenu = false;
   }
 };

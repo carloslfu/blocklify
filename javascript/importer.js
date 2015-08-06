@@ -22,7 +22,7 @@
 
 // TODOs:
 //  - Convert this in an instatiable class, not singleton (Mixin with Blocklify.importer('JavaScript')).
-//  - Support for: NewExpression, LogicalExpression, ThrowStatement.
+//  - Support for: LogicalExpression, ThrowStatement.
 
 goog.provide('Blocklify.JavaScript.importer');
 
@@ -115,7 +115,7 @@ Blocklify.JavaScript.importer.setOutput = function(block, bool) {
 };
 Blocklify.JavaScript.importer.appendCloneMutation = function(block, name, elementName, elements, parent, options) {
   var no_inline_blocks = this.no_inline_atomic_blocks;
-  var mutation = block.getElementsByTagName('mutation')[0]; // one mutation element per block
+  var mutation = block.querySelector('[type=' + block.getAttribute('type') + ']>mutation') // one mutation element per block
   if (mutation == undefined) {
     mutation = goog.dom.createDom('mutation');
     block.appendChild(mutation);
@@ -359,7 +359,7 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       var stackBlock = this.appendStatement(null, node.properties, node, options);
       this.appendValueInput(block, 'ELEMENTS', stackBlock);
       break;
-    case 'ObjectElement':
+    case "ObjectElement":
       block = this.createBlock('js_json_element');
       var key = this.convert_atomic(node.key, node, options);
       var value = this.convert_atomic(node.value, node, options);
@@ -420,6 +420,13 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       this.appendValueInput(block, 'FIRST', firstBlock);
       this.appendValueInput(block, 'DO', doBlock);
       this.appendValueInput(block, 'STEP', stepBlock);
+      break;
+    case "NewExpression":
+      block = this.createBlock('js_new_expression');
+      var classBlock = this.convert_atomic(node.callee, node);
+      this.setOutput(classBlock, true);
+      this.appendValueInput(block, 'CLASS', classBlock);
+      this.appendCloneMutation(block, 'arguments', 'ARGUMENT', node.arguments, node, options);
       break;
     
     default:  // if not implemented block
