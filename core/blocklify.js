@@ -15,7 +15,9 @@
  */
 
 // Global TODOs:
-// - Fix all broken blocks that are using the deprecated interpolateMsg method.
+// - Use separate folder for ES5 standard.
+// - Start implementation of ES6 blocks (javascript folder should contain common files,common folders, ES5 and ES6 folders).
+// - Improve creation of importers, we could have templates of code and map those templates to blocks (Experimental).
 
 /**
  * @fileoverview Helper functions for generate parsers from any language to blocks (Dont use renderer - outdated).
