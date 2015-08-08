@@ -95,6 +95,7 @@ Blockly.Blocks['js_assignment_expression'] = {
     });
   }
 };
+
 Blockly.Blocks['js_update_expression_prefix'] = {
   /**
    * Block for redering a prefix update expression.
@@ -129,6 +130,7 @@ Blockly.Blocks['js_update_expression_prefix'] = {
     Blocklify.JavaScript.Blocks.setMutators(this,[{name: 'switch'}]);
   }
 };
+
 Blockly.Blocks['js_update_expression_noprefix'] = {
   /**
    * Block for redering a no prefix update expression.
@@ -164,7 +166,7 @@ Blockly.Blocks['js_update_expression_noprefix'] = {
   }
 };
 
-// TODO: sepearate this block in tree blocks: js_binary_expression_logical, js_binary_expression_aritmetic and
+// TODO: sepearate this block in three blocks: js_binary_expression_logical, js_binary_expression_aritmetic and
 //       js_binary_expression_bitwise beacause the dropdown is so large
 Blockly.Blocks['js_binary_expression'] = {
   /**
@@ -216,6 +218,43 @@ Blockly.Blocks['js_binary_expression'] = {
       "output": null,
       "inputsInline": true,
       "tooltip": "Binary expression."
+    });
+  }
+};
+
+Blockly.Blocks['js_logical_expression'] = {
+  /**
+   * Block for redering a logical expression.
+   * @this Blockly.Block
+   */
+  init: function() {
+    var OPERATORS = [
+      ['&&', '&&'],
+      ['||', '||']
+    ];
+    this.jsonInit({
+      "id": "js_logical_expression",
+      "message0": "%1 %2 %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "LEFT"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": OPERATORS
+        },
+        {
+          "type": "input_value",
+          "name": "RIGHT",
+          "align": "RIGHT"
+        }
+      ],
+      "colour": 220,
+      "output": null,
+      "inputsInline": true,
+      "tooltip": "Logical expression."
     });
   }
 };

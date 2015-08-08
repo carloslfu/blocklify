@@ -22,7 +22,7 @@
 
 // TODOs:
 //  - Convert this in an instatiable class, not singleton (Mixin with Blocklify.importer('JavaScript')).
-//  - Support for: LogicalExpression, ThrowStatement.
+//  - Support for: ThrowStatement.
 
 goog.provide('Blocklify.JavaScript.importer');
 
@@ -331,8 +331,12 @@ Blocklify.JavaScript.importer.convert_atomic = function(node, parent, options, p
       this.appendField(block, 'OPERATOR', node.operator);
       this.appendValueInput(block, 'ARGUMENT', argBlock);
       break;
-    case "BinaryExpression":
-      block = this.createBlock('js_binary_expression');
+    case "BinaryExpression": case "LogicalExpression":
+      if (node.type == "BinaryExpression") {
+        block = this.createBlock('js_binary_expression');
+      } else {
+        block = this.createBlock('js_logical_expression');
+      }
       var leftBlock = this.convert_atomic(node.left, node);
       var rightBlock = this.convert_atomic(node.right, node);
       this.setOutput(rightBlock, true);
