@@ -101,6 +101,7 @@ Blocklify.JavaScript.toolbox =
     '</category>' +
     '<category name="Statements">' +
       '<block type="js_if_statement"></block>' +
+      '<block type="js_switch_statement"></block>' +
       '<block type="js_for_statement"></block>' +
       '<block type="js_return_statement"></block>' +
     '</category>' +
