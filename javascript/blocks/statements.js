@@ -257,3 +257,50 @@ Blockly.Blocks['js_if_statement'] = {
     }
   }
 };
+
+
+Blockly.Blocks['js_if_if_statement'] = {
+  /**
+   * Mutator block for if container.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(220);
+    this.appendDummyInput()
+        .appendField(Blockly.Msg.CONTROLS_IF_IF_TITLE_IF);
+    this.appendStatementInput('STACK');
+    this.setTooltip(Blockly.Msg.CONTROLS_IF_IF_TOOLTIP);
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_elseif_statement'] = {
+  /**
+   * Mutator bolck for else-if condition.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(220);
+    this.appendDummyInput()
+        .appendField(Blockly.Msg.CONTROLS_IF_ELSEIF_TITLE_ELSEIF);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip(Blockly.Msg.CONTROLS_IF_ELSEIF_TOOLTIP);
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['js_else_statement'] = {
+  /**
+   * Mutator block for else condition.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(220);
+    this.appendDummyInput()
+        .appendField(Blockly.Msg.CONTROLS_IF_ELSE_TITLE_ELSE);
+    this.setPreviousStatement(true);
+    this.setTooltip(Blockly.Msg.CONTROLS_IF_ELSE_TOOLTIP);
+    this.contextMenu = false;
+  }
+};
