@@ -349,11 +349,11 @@ Blockly.Blocks['js_switch_statement'] = {
   domToMutation: function(xmlElement) {
     this.caseCount_ = parseInt(xmlElement.getAttribute('case'), 10);
     this.defaultCount_ = parseInt(xmlElement.getAttribute('default'), 10);
-    for (var i = 1; i <= this.caseCount_; i++) {
+    for (var i = 0; i < this.caseCount_; i++) {
       this.appendValueInput('CASE' + i)
-          .appendField('case');
+          .appendField('case').setAlign(Blockly.ALIGN_RIGHT);
       this.appendValueInput('DO' + i)
-          .appendField('do');
+          .appendField('do').setAlign(Blockly.ALIGN_RIGHT);
     }
     if (this.elseCount_) {
       this.appendStatementInput('DEFAULT')
@@ -370,7 +370,7 @@ Blockly.Blocks['js_switch_statement'] = {
     var containerBlock = Blockly.Block.obtain(workspace, 'js_switch_container');
     containerBlock.initSvg();
     var connection = containerBlock.getInput('STACK').connection;
-    for (var i = 1; i <= this.caseCount_; i++) {
+    for (var i = 0; i < this.caseCount_; i++) {
       var caseBlock = Blockly.Block.obtain(workspace, 'js_case_statement');
       caseBlock.initSvg();
       connection.connect(caseBlock.previousConnection);
@@ -405,23 +405,23 @@ Blockly.Blocks['js_switch_statement'] = {
     while (clauseBlock) {
       switch (clauseBlock.type) {
         case 'js_case_statement':
-          this.caseCount_++;
           var caseInput = this.appendValueInput('CASE' + this.caseCount_)
-              .appendField('case');
+              .appendField('case').setAlign(Blockly.ALIGN_RIGHT);
           var doInput = this.appendStatementInput('DO' + this.caseCount_);
-          doInput.appendField('do');
+          doInput.appendField('do').setAlign(Blockly.ALIGN_RIGHT);
           // Reconnect any child blocks.
           if (clauseBlock.valueConnection_) {
-            ifInput.connection.connect(clauseBlock.valueConnection_);
+            caseInput.connection.connect(clauseBlock.valueConnection_);
           }
           if (clauseBlock.statementConnection_) {
             doInput.connection.connect(clauseBlock.statementConnection_);
           }
+          this.caseCount_++;
           break;
         case 'js_default_statement':
           this.defaultCount_++;
-          var defaultInput = this.appendStatementInput('ELSE');
-          elseInput.appendField('default');
+          var defaultInput = this.appendStatementInput('DEFAULT');
+          defaultInput.appendField('default');
           // Reconnect any child blocks.
           if (clauseBlock.statementConnection_) {
             defaultInput.connection.connect(clauseBlock.statementConnection_);
@@ -472,14 +472,14 @@ Blockly.Blocks['js_switch_statement'] = {
    */
   saveConnections: function(containerBlock) {
     var clauseBlock = containerBlock.getInputTargetBlock('STACK');
-    var i = 1;
+    var i = 0;
     while (clauseBlock) {
       switch (clauseBlock.type) {
         case 'js_case_statement':
           var inputCase = this.getInput('CASE' + i);
           var inputDo = this.getInput('DO' + i);
           clauseBlock.valueConnection_ =
-              inputIf && inputIf.connection.targetConnection;
+              inputCase && inputCase.connection.targetConnection;
           clauseBlock.statementConnection_ =
               inputDo && inputDo.connection.targetConnection;
           i++;

@@ -47,3 +47,21 @@ Blocklify.JavaScript.Generator['js_if_statement'] = function(block) {
   }
   return code + '\n';
 };
+
+Blocklify.JavaScript.Generator['js_switch_statement'] = function(block) {
+  var consequent;
+  var discriminant = Blocklify.JavaScript.Generator.valueToCode(block, 'DISCRIMINANT',
+      Blocklify.JavaScript.Generator.ORDER_NONE);
+  var code = 'switch (' + discriminant + ') {\n';
+  for (n = 0; n < block.caseCount_; n++) {
+    var test = Blocklify.JavaScript.Generator.valueToCode(block, 'CASE' + n,
+        Blocklify.JavaScript.Generator.ORDER_NONE);
+    consequent = Blocklify.JavaScript.Generator.statementToCode(block, 'DO' + n);
+    code += '  case ' + test + ':\n    ' + consequent;
+  }
+  if (block.defaultCount_) {
+    consequent = Blocklify.JavaScript.Generator.statementToCode(block, 'DEFAULT');
+    code += '  default:\n' + consequent;
+  }
+  return code + '}\n';
+};
