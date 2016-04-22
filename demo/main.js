@@ -22,22 +22,32 @@
 
 var mainWorkspace;
 
-var onload = function () {
+document.addEventListener("DOMContentLoaded", function() {
 	var blockly_div = document.getElementById('blocklyDiv');
 	var toolbox_div = document.createElement('div');
 	//Loads toolbox for JavaScript
 	toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
 	document.body.appendChild(toolbox_div);
 	mainWorkspace = Blockly.inject(blockly_div,
-	        {toolbox: document.getElementById('javascript_toolbox'), media: "../blockly/media/"});
+          {
+            toolbox: toolbox,
+            media: "../blockly/media/",
+            zoom: {
+              controls: true,
+              wheel: true,
+              startScale: 1.0,
+              maxScale: 3,
+              minScale: 0.3,
+              scaleSpeed: 1.2},
+          });
 
   // charges the example code
   document.getElementById('code').value = exampleCode;
-};
+});
 
 var delete_all_blocks = function() {
-	mainWorkspace.getAllBlocks().forEach(function (el) {
-		el.dispose(true, false);
+	mainWorkspace.getTopBlocks().forEach(function (el) {
+		el.dispose();
 	});
 };
 
@@ -45,7 +55,7 @@ var parse_code = function () {
 	delete_all_blocks();
 	var javascript_code = document.getElementById('code').value;
 	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'atomic');
-	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
+	Blockly.Xml.domToWorkspace(xmlDom, mainWorkspace);
 };
 
 var parse_blocks = function () {

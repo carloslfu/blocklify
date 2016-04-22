@@ -1,4 +1,4 @@
-# Blocklify (alpha)
+# Blocklify (alpha 2)
 
 Is an extension of [Blockly][blockly] for show code in blocks and generate the same code(ideally). The main idea is make a embeddable block editor for the most common text editors like sublime, brackets or any text scripting tool. The way for do that is make blocks for each language that represent the language, this helps to show code in blocks and generate code from blocks.
 
@@ -9,7 +9,7 @@ See the [BB editor][bb-editor-git] research project page.
 [bb-editor-git]: https://github.com/carloslfu/BB-editor
 
 A [live demo of pattern matching (custom blocks importers)][paternmatching].
-[paternmatching]: https://carloslfu.github.io/blocklify/tests/patterns/
+[paternmatching]: https://carloslfu.github.io/blocklify/tests/playground/
 
 A [live demo of native language blocks][livedemo].
 [livedemo]: https://carloslfu.github.io/blocklify/demo/

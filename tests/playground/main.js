@@ -22,34 +22,63 @@
 
 var mainWorkspace;
 
-var onload = function() {
-  var toolbox_div = document.createElement('div');
-  //Loads toolbox for JavaScript
-  toolbox_div.innerHTML = Blocklify.JavaScript.toolbox;
-  document.body.appendChild(toolbox_div);
+document.addEventListener("DOMContentLoaded", function() {
+  Blocklify.JavaScript.Generator.extrernalSources.push(Blockly.JavaScript); // external generators
+  var toolbox = document.getElementById('blockly_toolbox');
+  //Loads JavaScript toolbox
+  var javascript_toolbox = Blockly.Xml.textToDom(Blocklify.JavaScript.toolbox);
+  //Merge into blockly toolbox
+  toolbox.innerHTML += '<sep></sep>';
+  toolbox.innerHTML += '<sep></sep>';
+  toolbox.innerHTML += '<category name="JavaScript"></category>';
+  toolbox.innerHTML += '<sep></sep>';
+  var num_els = javascript_toolbox.children.length;
+  for (var i = 0; i < num_els; i++) {
+    toolbox.appendChild(javascript_toolbox.children[0]);
+  }
+  //toolbox.innerHTML += javascript_toolbox; // TODO: report bug, innerHTML with sep element doesn't work properly
   mainWorkspace = Blockly.inject(document.getElementById('blocklyDiv'),
-          {toolbox: document.getElementById('javascript_toolbox'), media: "../../blockly/media/"});
+          {
+            toolbox: toolbox,
+            media: "../../blockly/media/",
+            zoom: {
+              controls: true,
+              wheel: true,
+              startScale: 1.0,
+              maxScale: 3,
+              minScale: 0.3,
+              scaleSpeed: 1.2},
+          });
+  var el = document.getElementById(':1'),
+  elClone = el.cloneNode(true);
+  el.parentNode.replaceChild(elClone, el);
+  elClone.children[0].setAttribute('class', 'categoryBlockly');
+  el = document.getElementById(':d');
+  elClone = el.cloneNode(true);
+  el.parentNode.replaceChild(elClone, el);
+  elClone.children[0].setAttribute('class', 'categoryJavaScript');
 
   // charges the example code
   document.getElementById('code').value = exampleCode;
-}
+});
 
 var delete_all_blocks = function() {
-	mainWorkspace.getAllBlocks().forEach(function (el) {
-		el.dispose(true, false);
-	});
+  mainWorkspace.getTopBlocks().forEach(function (el) {
+    el.dispose();
+  });
 };
 
 var parse_code = function () {
-	delete_all_blocks();
-	var javascript_code = document.getElementById('code').value;
-	var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, 'atomic');
-	Blockly.Xml.domToWorkspace(mainWorkspace, xmlDom);
+  delete_all_blocks();
+  var javascript_code = document.getElementById('code').value;
+  var mode = document.getElementById('modeSelect').value;
+  var xmlDom = Blocklify.JavaScript.importer.codeToDom(javascript_code, mode);
+  Blockly.Xml.domToWorkspace(xmlDom, mainWorkspace);
 };
 
 var parse_blocks = function () {
-	var output = document.getElementById('code');
-  	output.value = Blocklify.JavaScript.Generator.workspaceToCode(mainWorkspace);
+  var output = document.getElementById('code');
+  output.value = Blockly.JavaScript.workspaceToCode(mainWorkspace);
 };
 
 var exampleCode = 
