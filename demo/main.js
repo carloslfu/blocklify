@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	document.body.appendChild(toolbox_div);
 	mainWorkspace = Blockly.inject(blockly_div,
           {
-            toolbox: toolbox,
+            toolbox: toolbox_div,
             media: "../blockly/media/",
             zoom: {
               controls: true,
