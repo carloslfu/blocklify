@@ -36,6 +36,20 @@ Just add blocklify_compressed.js file to your code (See the demo in demos folder
 
 This proyect is under alpha development, don't use for production, is a work in progress.
 
+## Importing and exporting code
+
+There are two use cases that you may take in mind when import code:
+
+### High level blocks that generates code in many programming languages
+
+If you need to design or you have a set of blocks that generetes to many programming languages (like core Blockly blocks), you also need a set of code importers. One importer per language, each importer contains a list of code patterns that are transformed into blocks. The problem here is that if the imported code in most cases don't match any patterns and you may manually do pattern-importers for each pattern that the programming language allows to describe your block.
+
+### High level blocks that generates code only in one programming language
+
+In this case there are two possibilities. You can do the same as in the previus topic but also you can mix your high level blocks with the Blocklify specific language low-level blocks (i.e. Blocklify JS blocks). This approach allows you to do two-way transformation of code (code <-> blocks) and depends on your design if the transfomation is the same. You can edit code and import it and modify the blocks and export it, and do it periodically with the same program.
+
+This approach removes the headeache of make impoter-patterns for each case, because you only cares of implement the importers that you want, incrementally, and the Blocklify specific language low-level blocks fills the other.
+
 ## Develop
 
 Proyect details in the [documentation page][docs-page].
