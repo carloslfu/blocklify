@@ -44,7 +44,7 @@ There are two use cases that you may take in mind when import code:
 
 If you need to design or you have a set of blocks that generetes to many programming languages (like core Blockly blocks), you also need a set of code importers. One importer per language, each importer contains a list of code patterns that are transformed into blocks. The problem here is that if the imported code in most cases don't match any patterns and you may manually do pattern-importers for each pattern that the programming language allows to describe your block.
 
-### High level blocks that generates code only in one programming language
+### High level blocks that generates code in only one programming language
 
 In this case there are two possibilities. You can do the same as in the previus topic but also you can mix your high level blocks with the Blocklify specific language low-level blocks (i.e. Blocklify JS blocks). This approach allows you to do two-way transformation of code (code <-> blocks) and depends on your design if the transfomation is the same. You can edit code and import it and modify the blocks and export it, and do it periodically with the same program.
 
