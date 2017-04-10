@@ -1,6 +1,6 @@
 # Blocklify (alpha 2)
 
-Note: I researching and developing base tools for Code editing and colaborative environments. In next months I will expose what I leaned from this proyect, make some improvements and give you some useful tools you might be interested. If curious about tools, see my activity in other repos ;). 
+Note: I am researching and developing base tools for Code editing and colaborative environments. In next months I will expose what I leaned from this proyect, make some improvements and give you some useful tools you might be interested. If curious about tools, see my activity in other repos ;). 
 
 Is an extension of Blockly for show code in blocks and generate the same code(ideally). The main idea is make a embeddable block editor for the most common text editors like sublime, brackets or any text scripting tool. The way for do that is make blocks for each language that represent the language, this helps to show code in blocks and generate code from blocks.
 
